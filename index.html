@@ -23,6 +23,7 @@ input[type=checkbox],input[type=file]{width:auto}
 .tree details>summary{cursor:pointer;padding:2px 0}.gb{padding-left:16px}.vb{padding:2px 0 6px 16px}
 .pk{max-height:300px;overflow:auto;border:1px solid var(--bd);border-radius:4px;padding:4px 8px;margin:4px 0;background:var(--bg)}
 .pk details>summary{cursor:pointer;padding:2px 0}.vc{display:inline-block;min-width:46px;margin:1px 4px 1px 0;white-space:nowrap}.ctl{margin:2px 0 4px}
+.tabs{display:flex;gap:4px;margin:10px 0 4px;border-bottom:1px solid var(--bd)}.tabs button{border:1px solid var(--bd);border-bottom:none;border-radius:6px 6px 0 0;padding:5px 14px;background:var(--card);color:var(--fg)}.tabs button.on{background:var(--on);font-weight:600;color:var(--ac)}.pane[hidden]{display:none}
 .hb{max-height:380px;overflow:auto;border:1px solid var(--bd);border-radius:4px;padding:6px 8px;background:var(--bg)}
 .hv{display:flex;gap:10px;align-items:baseline;padding:2px 0;border-bottom:1px solid var(--bd)}.vr{flex:0 0 74px;color:var(--mut);font-size:11px}
 .heb{flex:1;direction:rtl;text-align:right;font-size:20px;line-height:1.7;font-family:"SBL Hebrew","Ezra SIL","Times New Roman",serif}.qv{color:var(--mut);font-size:17px}
@@ -30,14 +31,18 @@ input[type=checkbox],input[type=file]{width:auto}
 <h1>Hebrew Stylometry (Higher Criticism)</h1>
 <div class="m">Reproduces the method of Faigenbaum-Golovin et al. (PLOS ONE 2025) on the Open Scriptures Hebrew Bible (CC BY). The three built-in corpora are a reproduction, not an exact replica of the paper's numbers. <span id="st">Loading…</span> &middot; <a href="validation.html">How closely does this match the paper? &rarr;</a></div>
 
+<div class="tabs" role="tablist"><button data-a="tab" data-t="home" class="on">Home</button><button data-a="tab" data-t="unit">Unit builder</button><button data-a="tab" data-t="corp">Corpus builder</button></div>
+
+<div id="p-home" class="pane">
 <div class="g">
-<section><h2>Corpora</h2><div id="cl" class="l"></div></section>
-<section class="wide"><h2>Units</h2><input id="uf" placeholder="Filter units (e.g. Deut 6, Exod)…"><div id="ut" class="tall tree"></div></section>
+<section><h2>Corpora <span class="m">(a group of units)</span></h2><div id="cl" class="l"></div></section>
+<section class="wide"><h2>Units <span class="m">(a text made of verse ranges)</span></h2><input id="uf" placeholder="Filter units (e.g. Deut 6, Exod)…"><div id="ut" class="tall tree"></div></section>
+</div>
+<section id="out" class="t"><span class="m">Click View on a corpus or unit.</span></section>
 </div>
 
-<section id="out" class="t"><span class="m">Click a corpus or unit.</span></section>
-
-<details class="box" id="ubx"><summary><b>Unit builder</b> (a text made of verse ranges)</summary>
+<div id="p-unit" class="pane" hidden>
+<section><h2 id="uh">Unit builder <span class="m">(a text made of verse ranges)</span></h2>
 <input id="un" placeholder="Name, e.g. Ark narrative">
 <div>Input method: <span class="tg"><button id="m1" class="on" data-a="mode" data-m="type">Type ranges</button><button id="m2" data-a="mode" data-m="pick">Pick verses</button></span></div>
 <div id="pw" hidden>
@@ -46,17 +51,18 @@ input[type=checkbox],input[type=file]{width:auto}
 <div><button data-a="padd">Add checked verses to unit</button> <button data-a="pclr">Clear checks</button> <span id="pc" class="m"></span></div>
 </div>
 <label class="m" for="ur">Unit contents, one range per line (the picker adds lines here; you can edit freely)</label>
-<textarea id="ur" rows="4" placeholder="Deut 8-11&#10;2Kgs 17:1-21&#10;Gen 5:3-28,30-32"></textarea>
+<textarea id="ur" rows="5" placeholder="Deut 8-11&#10;2Kgs 17:1-21&#10;Gen 5:3-28,30-32"></textarea>
 <label><input type="checkbox" id="uref"> Reference-only (adds to a corpus's counts, never tested)</label>
-<div><button id="up">Preview Hebrew</button> <button id="us">Save unit</button> <span id="um" class="m"></span></div>
-<div id="upv"></div></details>
+<div><button id="up">Preview Hebrew</button> <button id="us">Save unit</button> <button id="uc" hidden data-a="ucancel">Cancel edit</button> <span id="um" class="m"></span></div>
+<div id="upv"></div></section></div>
 
-<details class="box" id="cbx"><summary><b>Corpus builder</b> (a group of units)</summary>
+<div id="p-corp" class="pane" hidden>
+<section><h2>Corpus builder <span class="m">(a group of units)</span></h2>
 <input id="cn" placeholder="Name">
 <input id="cf" placeholder="Filter units…">
 <div id="ct" class="tall tree"></div>
 <div class="m"><span id="cc">0 units selected</span>. Minimums: 5 testable units, 5,000 tokens, 250 tokens per unit.</div>
-<button id="cb">Save corpus</button> <span id="cm" class="m"></span></details>
+<button id="cb">Save corpus</button> <span id="cm" class="m"></span></section></div>
 
 <div><button id="ex">Export my units/corpora</button> <label class="m">Import: <input type="file" id="im" accept=".json"></label></div>
 <p class="m">Units and corpora you create are saved in this browser only. Export them to keep a copy or move them elsewhere.</p>
@@ -67,6 +73,7 @@ const $=s=>document.querySelector(s),BR='https://raw.githubusercontent.com/opens
 let LS=null;try{LS=window.localStorage}catch(e){}
 let base,CHU={},U={},C={},mem={},my={units:{},corpora:{}};
 const openSt={},selC=new Set(),pick=new Set(),docs={};
+const rc=(p,a)=>`<td class="${p!==null&&p<=a?'bad':'ok'}">${p===null?'':p<=a?'rejected':'not rejected'}</td>`;
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),fp=p=>p<1e-3?p.toExponential(1):p.toFixed(3),fx=x=>x.toLocaleString();
 const bname=k=>(Stylo.BOOKS.find(b=>b[0]===k)||[k,k])[1];
 const tok=id=>{try{return Stylo.quickTokens(U[id].ranges)}catch(e){return 0}};
@@ -80,7 +87,7 @@ function merge(){U={...CHU,...base.units,...my.units};C={...base.corpora,...my.c
 function groups(){const custom=Object.keys(U).filter(id=>!U[id].auto);
  return [{k:'custom',t:'Custom',ids:custom,w:'unit'}].concat(Stylo.BOOKS.map(([k,n])=>({k,t:n,ids:Stylo.chapters(k).map(c=>k+'.'+c),w:'chapter'})))}
 function rowB(id){const u=U[id],mine=!!my.units[id];
- return `<div class="r"><span>${esc(lab(id))}${u.ref?' <span class="m">(reference)</span>':''} <span class="m">${fx(tok(id))} tokens</span>${(mem[id]||[]).map(k=>` <span class="tag">${esc(k)}</span>`).join('')}${u.auto?'':` <span class="m">${esc(u.ranges.join('; ').slice(0,56))}</span>`}${mine?' <span class="tag">mine</span>':''}</span><span class="nw"><button data-a="vu" data-id="${esc(id)}">View</button> <button data-a="tu" data-id="${esc(id)}">Test</button>${mine?` <button data-a="du" data-id="${esc(id)}" title="Delete this unit">&#10005;</button>`:''}</span></div>`}
+ return `<div class="r"><span>${esc(lab(id))}${u.ref?' <span class="m">(reference)</span>':''} <span class="m">${fx(tok(id))} tokens</span>${(mem[id]||[]).map(k=>` <span class="tag">${esc(k)}</span>`).join('')}${u.auto?'':` <span class="m">${esc(u.ranges.join('; ').slice(0,56))}</span>`}${mine?' <span class="tag">mine</span>':''}</span><span class="nw"><button data-a="vu" data-id="${esc(id)}">View</button>${mine?` <button data-a="eu" data-id="${esc(id)}">Edit</button> <button data-a="du" data-id="${esc(id)}" title="Delete this unit">&#10005;</button>`:''}</span></div>`}
 function rowP(id){const u=U[id];
  return `<label class="r"><span><input type="checkbox" data-u="${esc(id)}"${selC.has(id)?' checked':''}> ${esc(lab(id))}${u.ref?' <span class="m">(reference)</span>':''} <span class="m">${fx(tok(id))} tokens</span>${(mem[id]||[]).map(k=>` <span class="tag">${esc(k)}</span>`).join('')}${u.auto?'':` <span class="m">${esc(u.ranges.join('; ').slice(0,56))}</span>`}</span></label>`}
 function fill(d){if(d._done||!d.open)return;d._done=true;
@@ -104,15 +111,15 @@ const show=h=>{$('#out').innerHTML=h;$('#out').scrollIntoView({block:'nearest',b
 /* ---------- views ---------- */
 function viewCorpus(id){const c=C[id],ids=c.units,F=new Set();let tk=0;
  ids.forEach(i=>{const u=Stylo.ucount(U[i]);tk+=u.tokens;u.arr.forEach((x,j)=>{if(x>0)F.add(j)})});const e=Stylo.validate(ids,U);
- show(`<h2>${esc(c.name)}</h2><p>${ids.length} units (${ids.filter(i=>!U[i].ref).length} testable) · ${fx(tk)} tokens · ${fx(F.size)} distinct features</p>${e.length?`<p class="bad">${e.map(esc).join('<br>')}</p>`:''}<details><summary class="m">Units in this corpus</summary><p class="m">${ids.map(i=>esc(U[i].name)).join(', ')}</p></details><button data-a="ic" data-id="${esc(id)}">Run internal consistency</button><div id="ix"></div>`)}
+ show(`<h2>${esc(c.name)}</h2><p>${ids.length} units (${ids.filter(i=>!U[i].ref).length} testable) · ${fx(tk)} tokens · ${fx(F.size)} distinct features</p>${e.length?`<p class="bad">${e.map(esc).join('<br>')}</p>`:''}<p class="m">${ids.map(i=>esc(U[i].name)).join(', ')}</p><button data-a="ic" data-id="${esc(id)}">Run internal consistency</button><div id="ix"></div>`)}
 function runInternal(id){$('#ix').textContent='Running…';setTimeout(()=>{try{const res=Stylo.internal(C[id].units,U);let rej=0;
- const rows=res.map(x=>{const p=x.r?x.r.p:null;if(p!==null&&p<=.05)rej++;return `<tr><td>${esc(U[x.id].name)}</td><td>${fx(Stylo.ucount(U[x.id]).tokens)}</td><td>${p===null?'n/a':fp(p)}</td><td class="${p!==null&&p<=.05?'bad':'ok'}">${p===null?'':p<=.05?'rejected':'not rejected'}</td></tr>`}).join('');
- $('#ix').innerHTML=`<p>Each testable unit against the rest of its own corpus (leave-one-out). Rejections: <b>${rej}</b> of ${res.length} (about 5% expected for a homogeneous corpus).</p><table><tr><th>Unit</th><th>Tokens</th><th>p</th><th>Result</th></tr>${rows}</table>`}catch(e){$('#ix').innerHTML='<span class="bad">'+esc(e.message)+'</span>'}},30)}
+ const rows=res.map(x=>{const p=x.r?x.r.p:null;if(p!==null&&p<=.05)rej++;return `<tr><td>${esc(U[x.id].name)}</td><td>${fx(Stylo.ucount(U[x.id]).tokens)}</td><td>${p===null?'n/a':fp(p)}</td>${rc(p,.05)}${rc(p,.10)}</tr>`}).join('');
+ $('#ix').innerHTML=`<p>Each testable unit against the rest of its own corpus (leave-one-out). Rejections: <b>${rej}</b> of ${res.length} (about 5% expected for a homogeneous corpus).</p><table><tr><th>Unit</th><th>Tokens</th><th>p</th><th>Result at 0.05</th><th>Result at 0.10</th></tr>${rows}</table>`}catch(e){$('#ix').innerHTML='<span class="bad">'+esc(e.message)+'</span>'}},30)}
 function viewUnit(id){const u=U[id],c=Stylo.ucount(u),w=[];if(c.tokens<250)w.push('Under 250 tokens: results may be unreliable.');if(c.vs.size<10)w.push('Under 10 verses: the paper reports poor accuracy for very short texts.');
  show(`<h2>${esc(u.name)}</h2><p class="m">${esc(u.ranges.join('; '))}</p><p>${c.vs.size} verses · ${fx(c.tokens)} tokens · ${fx(c.distinct)} distinct features</p>${w.length?`<p class="bad">${w.join('<br>')}</p>`:''}<button data-a="tu" data-id="${esc(id)}">Test vs corpora</button> <button data-a="hb" data-id="${esc(id)}">Show Hebrew</button><div id="ix"></div>`)}
 function testUnit(id){viewUnit(id);$('#ix').textContent='Running…';setTimeout(()=>{try{const rs=Object.keys(C).map(k=>({k,r:Stylo.testVs(U[id],C[k].units,U)}));
  const best=rs.filter(x=>x.r).sort((a,b)=>b.r.p-a.r.p)[0];
- $('#ix').innerHTML=`<table><tr><th>Corpus</th><th>p</th><th>Result at 0.05</th></tr>${rs.map(x=>`<tr><td>${esc(C[x.k].name)}${best&&best.k===x.k?' ★':''}</td><td>${x.r?fp(x.r.p):'n/a'}</td><td class="${x.r&&x.r.p<=.05?'bad':'ok'}">${!x.r?'too few units':x.r.p<=.05?'rejected':'not rejected'}</td></tr>`).join('')}</table>
+ $('#ix').innerHTML=`<table><tr><th>Corpus</th><th>p</th><th>Result at 0.05</th><th>Result at 0.10</th></tr>${rs.map(x=>`<tr><td>${esc(C[x.k].name)}${best&&best.k===x.k?' ★':''}</td><td>${x.r?fp(x.r.p):'n/a'}</td>${x.r?rc(x.r.p,.05)+rc(x.r.p,.10):'<td colspan="2">too few units</td>'}</tr>`).join('')}</table>
  <p class="m">★ = highest p. "Rejected" means same-author is unlikely; "not rejected" only means the evidence is insufficient to rule it out, not that this corpus's author wrote it. In each corpus, units sharing verses with this text are left out (reference text is trimmed by the shared verses).</p>`}catch(e){$('#ix').innerHTML='<span class="bad">'+esc(e.message)+'</span>'}},30)}
 
 /* ---------- Hebrew text (fetched on demand from Open Scriptures; never stored here) ---------- */
@@ -147,12 +154,19 @@ function pickLines(){const by={};for(const s of pick){const m=/^(\w+) (\d+):(\d+
 function wholeChapter(vs){if(!vs.length)return null;const [b,c]=vs[0];if(vs.some(x=>x[0]!==b||x[1]!==c))return null;const id=b+'.'+c;return CHU[id]&&vs.length===Stylo.S.chap[b][c].length?id:null}
 
 /* ---------- events ---------- */
+function tab(n){for(const k of ['home','unit','corp']){$('#p-'+k).hidden=k!==n}document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('on',b.dataset.t===n))}
+let editId=null;
+function endEdit(){editId=null;$('#uh').innerHTML='Unit builder <span class="m">(a text made of verse ranges)</span>';$('#uc').hidden=true;$('#us').textContent='Save unit'}
 async function onAct(a,t){const i=t.dataset.id;
+ if(a==='tab')return tab(t.dataset.t);
+ if(a==='eu'){const u=my.units[i];editId=i;$('#un').value=u.name;$('#ur').value=u.ranges.join('\n');$('#uref').checked=!!u.ref;$('#upv').innerHTML='';$('#um').textContent='';
+  $('#uh').innerHTML='Editing unit <span class="m">(changes apply everywhere this unit is used)</span>';$('#uc').hidden=false;$('#us').textContent='Save changes';tab('unit');return}
+ if(a==='ucancel'){endEdit();$('#un').value='';$('#ur').value='';$('#uref').checked=false;$('#um').textContent='';return}
  if(a==='vc')viewCorpus(i);else if(a==='ic')runInternal(i);else if(a==='vu')viewUnit(i);else if(a==='tu')testUnit(i);
  else if(a==='hb'){$('#ix').innerHTML='';await hebrewInto($('#ix'),U[i].ranges)}
  else if(a==='du'){const users=Object.keys(my.corpora).filter(k=>my.corpora[k].units.includes(i));
   if(users.length)return show(`<span class="bad">Cannot delete "${esc(U[i].name)}": it is part of ${users.map(k=>esc(my.corpora[k].name)).join(', ')}. Delete or change that corpus first.</span>`);
-  if(confirm('Delete the unit "'+U[i].name+'"?')){delete my.units[i];selC.delete(i);save();render()}}
+  if(confirm('Delete the unit "'+U[i].name+'"?')){delete my.units[i];selC.delete(i);if(editId===i){endEdit();$('#un').value='';$('#ur').value=''}save();render()}}
  else if(a==='dc'){if(confirm('Delete the corpus "'+C[i].name+'"?')){delete my.corpora[i];save();render();$('#out').innerHTML=''}}
  else if(a==='gall'||a==='gnone'){const d=t.closest('details');d._ids.forEach(x=>a==='gall'?selC.add(x):selC.delete(x));d.querySelectorAll('input[data-u]').forEach(x=>x.checked=a==='gall');updSel(d);selCount()}
  else if(a==='mode'){const p=t.dataset.m==='pick';$('#pw').hidden=!p;$('#m1').classList.toggle('on',!p);$('#m2').classList.toggle('on',p)}
@@ -169,8 +183,8 @@ $('#up').onclick=()=>{const r=parseRanges($('#ur').value),el=$('#upv');if(!r.len
 $('#us').onclick=()=>{try{const n=$('#un').value.trim(),r=parseRanges($('#ur').value),ref=$('#uref').checked;if(!n)throw new Error('Give the unit a name.');
  if(!r.length)throw new Error('Add at least one range: type it, or pick verses and press "Add checked verses to unit".');
  const vs=Stylo.verses(r);if(!vs.length)throw new Error('Those ranges contain no text.');
- const wc=wholeChapter(vs);if(wc&&!ref)throw new Error('That is the complete chapter '+U[wc].name+', which is already in the unit list under '+bname(U[wc].book)+'. Use that unit, or tick Reference-only if you need a separate copy.');
- my.units['u'+Date.now()]={name:n,ranges:r,ref};save();render();$('#um').textContent='Saved to the Custom group.';$('#un').value='';$('#ur').value='';$('#upv').innerHTML=''}catch(e){$('#um').textContent=e.message}};
+ const wc=wholeChapter(vs);if(wc&&!ref&&!editId)throw new Error('That is the complete chapter '+U[wc].name+', which is already in the unit list under '+bname(U[wc].book)+'. Use that unit, or tick Reference-only if you need a separate copy.');
+ const was=editId;my.units[was||'u'+Date.now()]={name:n,ranges:r,ref};endEdit();save();render();$('#um').textContent=was?'Changes saved.':'Saved to the Custom group.';$('#un').value='';$('#ur').value='';$('#upv').innerHTML=''}catch(e){$('#um').textContent=e.message}};
 $('#cb').onclick=()=>{try{const n=$('#cn').value.trim(),ids=[...selC];if(!n)throw new Error('Give the corpus a name.');if(!ids.length)throw new Error('Select some units first.');
  const er=Stylo.validate(ids,U);if(er.length)throw new Error(er.join(' '));my.corpora['c'+Date.now()]={name:n,units:ids};save();selC.clear();$('#cn').value='';render();$('#cm').textContent='Saved.'}catch(e){$('#cm').textContent=e.message}};
 $('#ex').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(my,null,1)],{type:'application/json'}));a.download='my-stylometry-definitions.json';a.click()};
