@@ -42,6 +42,7 @@ input[type=checkbox],input[type=file]{width:auto}
 </div>
 
 <div id="p-unit" class="pane" hidden>
+<section><h2>Your custom units</h2><div id="ul" class="l"></div></section>
 <section><h2 id="uh">Unit builder <span class="m">(a text made of verse ranges)</span></h2>
 <input id="un" placeholder="Name, e.g. Ark narrative">
 <div>Input method: <span class="tg"><button id="m1" class="on" data-a="mode" data-m="type">Type ranges</button><button id="m2" data-a="mode" data-m="pick">Pick verses</button></span></div>
@@ -53,16 +54,17 @@ input[type=checkbox],input[type=file]{width:auto}
 <label class="m" for="ur">Unit contents, one range per line (the picker adds lines here; you can edit freely)</label>
 <textarea id="ur" rows="5" placeholder="Deut 8-11&#10;2Kgs 17:1-21&#10;Gen 5:3-28,30-32"></textarea>
 <label><input type="checkbox" id="uref"> Reference-only (adds to a corpus's counts, never tested)</label>
-<div><button id="up">Preview Hebrew</button> <button id="us">Save unit</button> <button id="uc" hidden data-a="ucancel">Cancel edit</button> <span id="um" class="m"></span></div>
+<div><button id="up">Preview Hebrew</button> <button id="us">Save unit</button> <button id="uc" hidden data-a="ucancel">Cancel edit / new unit</button> <span id="um" class="m"></span></div>
 <div id="upv"></div></section></div>
 
 <div id="p-corp" class="pane" hidden>
-<section><h2>Corpus builder <span class="m">(a group of units)</span></h2>
+<section><h2>Your custom corpora</h2><div id="cu" class="l"></div></section>
+<section><h2 id="ch">Corpus builder <span class="m">(a group of units)</span></h2>
 <input id="cn" placeholder="Name">
 <input id="cf" placeholder="Filter units…">
 <div id="ct" class="tall tree"></div>
 <div class="m"><span id="cc">0 units selected</span>. Minimums: 5 testable units, 5,000 tokens, 250 tokens per unit.</div>
-<button id="cb">Save corpus</button> <span id="cm" class="m"></span></section></div>
+<button id="cb">Save corpus</button> <button id="cx" hidden data-a="ccancel">Cancel edit / new corpus</button> <span id="cm" class="m"></span></section></div>
 
 <div><button id="ex">Export my units/corpora</button> <label class="m">Import: <input type="file" id="im" accept=".json"></label></div>
 <p class="m">Units and corpora you create are saved in this browser only. Export them to keep a copy or move them elsewhere.</p>
@@ -87,7 +89,7 @@ function merge(){U={...CHU,...base.units,...my.units};C={...base.corpora,...my.c
 function groups(){const custom=Object.keys(U).filter(id=>!U[id].auto);
  return [{k:'custom',t:'Custom',ids:custom,w:'unit'}].concat(Stylo.BOOKS.map(([k,n])=>({k,t:n,ids:Stylo.chapters(k).map(c=>k+'.'+c),w:'chapter'})))}
 function rowB(id){const u=U[id],mine=!!my.units[id];
- return `<div class="r"><span>${esc(lab(id))}${u.ref?' <span class="m">(reference)</span>':''} <span class="m">${fx(tok(id))} tokens</span>${(mem[id]||[]).map(k=>` <span class="tag">${esc(k)}</span>`).join('')}${u.auto?'':` <span class="m">${esc(u.ranges.join('; ').slice(0,56))}</span>`}${mine?' <span class="tag">mine</span>':''}</span><span class="nw"><button data-a="vu" data-id="${esc(id)}">View</button>${mine?` <button data-a="eu" data-id="${esc(id)}">Edit</button> <button data-a="du" data-id="${esc(id)}" title="Delete this unit">&#10005;</button>`:''}</span></div>`}
+ return `<div class="r"><span>${esc(lab(id))}${u.ref?' <span class="m">(reference)</span>':''} <span class="m">${fx(tok(id))} tokens</span>${(mem[id]||[]).map(k=>` <span class="tag">${esc(k)}</span>`).join('')}${mine?' <span class="tag">mine</span>':''}</span><span class="nw"><button data-a="vu" data-id="${esc(id)}">View</button>${mine?` <button data-a="du" data-id="${esc(id)}" title="Delete this unit">&#10005;</button>`:''}</span></div>`}
 function rowP(id){const u=U[id];
  return `<label class="r"><span><input type="checkbox" data-u="${esc(id)}"${selC.has(id)?' checked':''}> ${esc(lab(id))}${u.ref?' <span class="m">(reference)</span>':''} <span class="m">${fx(tok(id))} tokens</span>${(mem[id]||[]).map(k=>` <span class="tag">${esc(k)}</span>`).join('')}${u.auto?'':` <span class="m">${esc(u.ranges.join('; ').slice(0,56))}</span>`}</span></label>`}
 function fill(d){if(d._done||!d.open)return;d._done=true;
@@ -105,7 +107,10 @@ $('#ct').addEventListener('change',e=>{const id=e.target.dataset.u;if(!id)return
 function selCount(){$('#cc').textContent=selC.size+' unit'+(selC.size===1?'':'s')+' selected'}
 function render(){merge();
  $('#cl').innerHTML=Object.keys(C).map(k=>`<div class="r"><span>${esc(C[k].name)} <span class="m">${C[k].units.length} units${my.corpora[k]?' · mine':''}</span></span><span class="nw"><button data-a="vc" data-id="${esc(k)}">View</button>${my.corpora[k]?` <button data-a="dc" data-id="${esc(k)}" title="Delete this corpus">&#10005;</button>`:''}</span></div>`).join('');
- drawTree($('#ut'),'browse',$('#uf').value);drawTree($('#ct'),'pick',$('#cf').value);selCount()}
+ drawTree($('#ut'),'browse',$('#uf').value);drawTree($('#ct'),'pick',$('#cf').value);selCount();
+ const mu=Object.keys(my.units),mc=Object.keys(my.corpora);
+ $('#ul').innerHTML=mu.length?mu.map(id=>`<div class="r"><span>${esc(my.units[id].name)}${my.units[id].ref?' <span class="m">(reference)</span>':''} <span class="m">${fx(tok(id))} tokens · ${esc(my.units[id].ranges.join('; ').slice(0,60))}</span></span><span class="nw"><button data-a="eu" data-id="${esc(id)}">Edit</button> <button data-a="du" data-id="${esc(id)}" title="Delete">&#10005;</button></span></div>`).join(''):'<span class="m">None yet. Units you save appear here.</span>';
+ $('#cu').innerHTML=mc.length?mc.map(id=>`<div class="r"><span>${esc(my.corpora[id].name)} <span class="m">${my.corpora[id].units.length} units</span></span><span class="nw"><button data-a="ec" data-id="${esc(id)}">Edit</button> <button data-a="dc" data-id="${esc(id)}" title="Delete">&#10005;</button></span></div>`).join(''):'<span class="m">None yet. Corpora you save appear here.</span>'}
 const show=h=>{$('#out').innerHTML=h;$('#out').scrollIntoView({block:'nearest',behavior:'smooth'})};
 
 /* ---------- views ---------- */
@@ -116,7 +121,7 @@ function runInternal(id){$('#ix').textContent='Running…';setTimeout(()=>{try{c
  const rows=res.map(x=>{const p=x.r?x.r.p:null;if(p!==null&&p<=.05)rej++;return `<tr><td>${esc(U[x.id].name)}</td><td>${fx(Stylo.ucount(U[x.id]).tokens)}</td><td>${p===null?'n/a':fp(p)}</td>${rc(p,.05)}${rc(p,.10)}</tr>`}).join('');
  $('#ix').innerHTML=`<p>Each testable unit against the rest of its own corpus (leave-one-out). Rejections: <b>${rej}</b> of ${res.length} (about 5% expected for a homogeneous corpus).</p><table><tr><th>Unit</th><th>Tokens</th><th>p</th><th>Result at 0.05</th><th>Result at 0.10</th></tr>${rows}</table>`}catch(e){$('#ix').innerHTML='<span class="bad">'+esc(e.message)+'</span>'}},30)}
 function viewUnit(id){const u=U[id],c=Stylo.ucount(u),w=[];if(c.tokens<250)w.push('Under 250 tokens: results may be unreliable.');if(c.vs.size<10)w.push('Under 10 verses: the paper reports poor accuracy for very short texts.');
- show(`<h2>${esc(u.name)}</h2><p class="m">${esc(u.ranges.join('; '))}</p><p>${c.vs.size} verses · ${fx(c.tokens)} tokens · ${fx(c.distinct)} distinct features</p>${w.length?`<p class="bad">${w.join('<br>')}</p>`:''}<button data-a="tu" data-id="${esc(id)}">Test vs corpora</button> <button data-a="hb" data-id="${esc(id)}">Show Hebrew</button><div id="ix"></div>`)}
+ show(`<h2>${esc(u.name)}</h2><p class="m">${esc(u.ranges.join('; '))}</p><p>${c.vs.size} verses · ${fx(c.tokens)} tokens · ${fx(c.distinct)} distinct features</p>${w.length?`<p class="bad">${w.join('<br>')}</p>`:''}<button data-a="tu" data-id="${esc(id)}">Test vs corpora</button> <button data-a="hb" data-id="${esc(id)}">Show Hebrew</button>${my.units[id]?` <button data-a="eu" data-id="${esc(id)}">Edit custom unit</button>`:''}<div id="ix"></div>`)}
 function testUnit(id){viewUnit(id);$('#ix').textContent='Running…';setTimeout(()=>{try{const rs=Object.keys(C).map(k=>({k,r:Stylo.testVs(U[id],C[k].units,U)}));
  const best=rs.filter(x=>x.r).sort((a,b)=>b.r.p-a.r.p)[0];
  $('#ix').innerHTML=`<table><tr><th>Corpus</th><th>p</th><th>Result at 0.05</th><th>Result at 0.10</th></tr>${rs.map(x=>`<tr><td>${esc(C[x.k].name)}${best&&best.k===x.k?' ★':''}</td><td>${x.r?fp(x.r.p):'n/a'}</td>${x.r?rc(x.r.p,.05)+rc(x.r.p,.10):'<td colspan="2">too few units</td>'}</tr>`).join('')}</table>
@@ -155,19 +160,22 @@ function wholeChapter(vs){if(!vs.length)return null;const [b,c]=vs[0];if(vs.some
 
 /* ---------- events ---------- */
 function tab(n){for(const k of ['home','unit','corp']){$('#p-'+k).hidden=k!==n}document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('on',b.dataset.t===n))}
-let editId=null;
+let editId=null,editC=null;
+function endCEdit(){editC=null;$('#ch').innerHTML='Corpus builder <span class="m">(a group of units)</span>';$('#cx').hidden=true;$('#cb').textContent='Save corpus'}
 function endEdit(){editId=null;$('#uh').innerHTML='Unit builder <span class="m">(a text made of verse ranges)</span>';$('#uc').hidden=true;$('#us').textContent='Save unit'}
 async function onAct(a,t){const i=t.dataset.id;
  if(a==='tab')return tab(t.dataset.t);
  if(a==='eu'){const u=my.units[i];editId=i;$('#un').value=u.name;$('#ur').value=u.ranges.join('\n');$('#uref').checked=!!u.ref;$('#upv').innerHTML='';$('#um').textContent='';
   $('#uh').innerHTML='Editing unit <span class="m">(changes apply everywhere this unit is used)</span>';$('#uc').hidden=false;$('#us').textContent='Save changes';tab('unit');return}
+ if(a==='ec'){const c=my.corpora[i];editC=i;$('#cn').value=c.name;selC.clear();c.units.forEach(x=>selC.add(x));$('#cm').textContent='';$('#ch').innerHTML='Editing corpus <span class="m">(changes are saved over the original)</span>';$('#cx').hidden=false;$('#cb').textContent='Save changes';drawTree($('#ct'),'pick',$('#cf').value);selCount();tab('corp');return}
+ if(a==='ccancel'){endCEdit();selC.clear();$('#cn').value='';$('#cm').textContent='';drawTree($('#ct'),'pick',$('#cf').value);selCount();return}
  if(a==='ucancel'){endEdit();$('#un').value='';$('#ur').value='';$('#uref').checked=false;$('#um').textContent='';return}
  if(a==='vc')viewCorpus(i);else if(a==='ic')runInternal(i);else if(a==='vu')viewUnit(i);else if(a==='tu')testUnit(i);
  else if(a==='hb'){$('#ix').innerHTML='';await hebrewInto($('#ix'),U[i].ranges)}
  else if(a==='du'){const users=Object.keys(my.corpora).filter(k=>my.corpora[k].units.includes(i));
   if(users.length)return show(`<span class="bad">Cannot delete "${esc(U[i].name)}": it is part of ${users.map(k=>esc(my.corpora[k].name)).join(', ')}. Delete or change that corpus first.</span>`);
   if(confirm('Delete the unit "'+U[i].name+'"?')){delete my.units[i];selC.delete(i);if(editId===i){endEdit();$('#un').value='';$('#ur').value=''}save();render()}}
- else if(a==='dc'){if(confirm('Delete the corpus "'+C[i].name+'"?')){delete my.corpora[i];save();render();$('#out').innerHTML=''}}
+ else if(a==='dc'){if(confirm('Delete the corpus "'+C[i].name+'"?')){delete my.corpora[i];if(editC===i){endCEdit();selC.clear();$('#cn').value=''}save();render();$('#out').innerHTML=''}}
  else if(a==='gall'||a==='gnone'){const d=t.closest('details');d._ids.forEach(x=>a==='gall'?selC.add(x):selC.delete(x));d.querySelectorAll('input[data-u]').forEach(x=>x.checked=a==='gall');updSel(d);selCount()}
  else if(a==='mode'){const p=t.dataset.m==='pick';$('#pw').hidden=!p;$('#m1').classList.toggle('on',!p);$('#m2').classList.toggle('on',p)}
  else if(a==='pall'||a==='pnone')setChapter(t.dataset.b,+t.dataset.c,a==='pall');
@@ -186,7 +194,7 @@ $('#us').onclick=()=>{try{const n=$('#un').value.trim(),r=parseRanges($('#ur').v
  const wc=wholeChapter(vs);if(wc&&!ref&&!editId)throw new Error('That is the complete chapter '+U[wc].name+', which is already in the unit list under '+bname(U[wc].book)+'. Use that unit, or tick Reference-only if you need a separate copy.');
  const was=editId;my.units[was||'u'+Date.now()]={name:n,ranges:r,ref};endEdit();save();render();$('#um').textContent=was?'Changes saved.':'Saved to the Custom group.';$('#un').value='';$('#ur').value='';$('#upv').innerHTML=''}catch(e){$('#um').textContent=e.message}};
 $('#cb').onclick=()=>{try{const n=$('#cn').value.trim(),ids=[...selC];if(!n)throw new Error('Give the corpus a name.');if(!ids.length)throw new Error('Select some units first.');
- const er=Stylo.validate(ids,U);if(er.length)throw new Error(er.join(' '));my.corpora['c'+Date.now()]={name:n,units:ids};save();selC.clear();$('#cn').value='';render();$('#cm').textContent='Saved.'}catch(e){$('#cm').textContent=e.message}};
+ const er=Stylo.validate(ids,U);if(er.length)throw new Error(er.join(' '));const was=editC;my.corpora[was||'c'+Date.now()]={name:n,units:ids};endCEdit();save();selC.clear();$('#cn').value='';render();$('#cm').textContent=was?'Changes saved.':'Saved.'}catch(e){$('#cm').textContent=e.message}};
 $('#ex').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(my,null,1)],{type:'application/json'}));a.download='my-stylometry-definitions.json';a.click()};
 $('#im').onchange=async e=>{try{const j=JSON.parse(await e.target.files[0].text());Object.assign(my.units,j.units||{});Object.assign(my.corpora,j.corpora||{});save();render()}catch(x){alert('Import failed: '+x.message)}};
 (async()=>{try{const [ix,cp]=await Promise.all([fetch('data/index.json').then(r=>r.json()),fetch('data/corpora.json').then(r=>r.json())]);
