@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hebrew Stylometry (Higher Criticism)</title>
+<style>
+:root{color-scheme:light dark;--bg:#fff;--fg:#1a1a1a;--mut:#666;--bd:#ccc;--ac:#1f5fbf;--ok:#1a7f37;--bad:#b3261e;--card:#f6f6f6}
+@media(prefers-color-scheme:dark){:root{--bg:#161616;--fg:#e8e8e8;--mut:#999;--bd:#444;--ac:#6ea8ff;--ok:#56d364;--bad:#ff7b72;--card:#202020}}
+body{margin:0 auto;padding:12px;max-width:1000px;background:var(--bg);color:var(--fg);font:14px/1.45 system-ui,sans-serif}
+h1{font-size:20px;margin:0 0 4px}h2{font-size:15px;margin:0 0 6px}.m{color:var(--mut);font-size:12px}
+.g{display:flex;gap:12px;flex-wrap:wrap}.g>section{flex:1 1 300px;min-width:0}
+section,details{border:1px solid var(--bd);border-radius:6px;padding:8px;margin:8px 0;background:var(--card)}
+.l{max-height:260px;overflow:auto}.r{display:flex;justify-content:space-between;gap:6px;padding:2px 0;border-bottom:1px solid var(--bd);align-items:center}
+button{background:var(--bg);color:var(--ac);border:1px solid var(--bd);border-radius:4px;padding:2px 7px;cursor:pointer;font:inherit}
+input,textarea,select{background:var(--bg);color:var(--fg);border:1px solid var(--bd);border-radius:4px;font:inherit;width:100%;box-sizing:border-box;margin:2px 0}
+.t{overflow-x:auto}table{border-collapse:collapse;width:100%}td,th{border-bottom:1px solid var(--bd);padding:3px 6px;text-align:left}
+.ok{color:var(--ok)}.bad{color:var(--bad)}.heb{direction:rtl;font-size:20px;line-height:1.8;font-family:"SBL Hebrew","Ezra SIL",serif}
+</style></head><body>
+<h1>Hebrew Stylometry (Higher Criticism)</h1>
+<div class="m">Reproduces the method of Faigenbaum-Golovin et al. (PLOS ONE 2025) on the Open Scriptures Hebrew Bible (CC BY). The three built-in corpora are a reproduction, not an exact replica of the paper's numbers. <span id="st">Loading…</span></div>
+<div class="g">
+<section><h2>Corpora</h2><div id="cl" class="l"></div></section>
+<section><h2>Units</h2><input id="uf" placeholder="Filter units…"><div id="ul" class="l"></div></section>
+</div>
+<details><summary><b>Unit builder</b> (a text made of verse ranges)</summary>
+<input id="un" placeholder="Name, e.g. Ark narrative">
+<textarea id="ur" rows="3" placeholder="One range per line, e.g.&#10;1Sam 4-6&#10;2Sam 6&#10;2Kgs 17:1-21&#10;Gen 5:3-28,30-32"></textarea>
+<label><input type="checkbox" id="uref" style="width:auto"> Reference-only (adds to a corpus's counts, never tested)</label>
+<button id="us">Save unit</button> <span id="um" class="m"></span></details>
+<details><summary><b>Corpus builder</b> (a group of units)</summary>
+<input id="cn" placeholder="Name"><select id="cs" multiple size="9"></select>
+<div class="m">Ctrl/Cmd-click to select several. Minimums: 5 testable units, 5,000 tokens, 250 tokens per unit.</div>
+<button id="cb">Save corpus</button> <span id="cm" class="m"></span></details>
+<div><button id="ex">Export my units/corpora</button> <label class="m">Import: <input type="file" id="im" accept=".json" style="width:auto"></label></div>
+<section id="out" class="t"><span class="m">Click a corpus or unit.</span></section>
+<script src="stylo.js"></script>
+<script>
+const $=s=>document.querySelector(s),LS=window.localStorage,BR='https://raw.githubusercontent.com/openscriptures/morphhb/master/wlc/';
+let base,U={},C={},my={units:{},corpora:{}};
+const esc=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])),fp=p=>p<1e-3?p.toExponential(1):p.toFixed(3),fx=x=>x.toLocaleString();
+function load(){try{const j=JSON.parse(LS.getItem('stylo')||'{}');my.units=j.units||{};my.corpora=j.corpora||{}}catch(e){}}
+function save(){try{LS.setItem('stylo',JSON.stringify(my))}catch(e){}}
+function merge(){U={...base.units,...my.units};C={...base.corpora,...my.corpora}}
+function render(){merge();const f=$('#uf').value.toLowerCase();
+ $('#cl').innerHTML=Object.keys(C).map(k=>`<div class="r"><span>${esc(C[k].name)} <span class="m">${C[k].units.length} units${my.corpora[k]?' · mine':''}</span></span><button data-a="vc" data-id="${k}">View</button></div>`).join('');
+ const ids=Object.keys(U).filter(k=>U[k].name.toLowerCase().includes(f));
+ $('#ul').innerHTML=ids.map(k=>`<div class="r"><span>${esc(U[k].name)}${U[k].ref?' <span class="m">(ref)</span>':''}</span><span><button data-a="vu" data-id="${k}">View</button> <button data-a="tu" data-id="${k}">Test</button></span></div>`).join('');
+ $('#cs').innerHTML=Object.keys(U).map(k=>`<option value="${k}">${esc(U[k].name)}${U[k].ref?' (ref)':''}</option>`).join('')}
+function viewCorpus(id){const c=C[id],ids=c.units,s=ids.map(i=>Stylo.ucount(U[i])),tok=Stylo.sum(s.map(x=>x.tokens)),F=new Set();
+ ids.forEach(i=>{const a=Stylo.ucount(U[i]).arr;a.forEach((x,j)=>{if(x>0)F.add(j)})});
+ const e=Stylo.validate(ids,U);
+ $('#out').innerHTML=`<h2>${esc(c.name)}</h2><p>${ids.length} units (${ids.filter(i=>!U[i].ref).length} testable) · ${fx(tok)} tokens · ${fx(F.size)} distinct features</p>${e.length?`<p class="bad">${e.map(esc).join('<br>')}</p>`:''}<button data-a="ic" data-id="${id}">Run internal consistency</button><div id="ix"></div>`}
+function runInternal(id){$('#ix').textContent='Running…';setTimeout(()=>{const res=Stylo.internal(C[id].units,U);let rej=0;
+ const rows=res.map(x=>{const p=x.r?x.r.p:null;if(p!==null&&p<=.05)rej++;return `<tr><td>${esc(U[x.id].name)}</td><td>${Stylo.ucount(U[x.id]).tokens}</td><td>${p===null?'n/a':fp(p)}</td><td class="${p!==null&&p<=.05?'bad':'ok'}">${p===null?'':p<=.05?'rejected':'not rejected'}</td></tr>`}).join('');
+ $('#ix').innerHTML=`<p>Each testable unit against the rest of its own corpus (leave-one-out). Rejections: <b>${rej}</b> of ${res.length} (about 5% expected for a homogeneous corpus).</p><table><tr><th>Unit</th><th>Tokens</th><th>p</th><th>Result</th></tr>${rows}</table>`},30)}
+function viewUnit(id){const u=U[id],c=Stylo.ucount(u),w=[];if(c.tokens<250)w.push('Under 250 tokens: results may be unreliable.');if(c.vs.size<10)w.push('Under 10 verses: the paper reports poor accuracy for very short texts.');
+ $('#out').innerHTML=`<h2>${esc(u.name)}</h2><p class="m">${esc(u.ranges.join('; '))}</p><p>${c.vs.size} verses · ${fx(c.tokens)} tokens · ${fx(c.distinct)} distinct features</p>${w.length?`<p class="bad">${w.join('<br>')}</p>`:''}<button data-a="tu" data-id="${id}">Test vs corpora</button> <button data-a="hb" data-id="${id}">Show Hebrew</button><div id="ix"></div>`}
+function testUnit(id){viewUnit(id);$('#ix').textContent='Running…';setTimeout(()=>{const rs=Object.keys(C).map(k=>({k,r:Stylo.testVs(U[id],C[k].units,U)}));
+ const best=rs.filter(x=>x.r).sort((a,b)=>b.r.p-a.r.p)[0];
+ $('#ix').innerHTML=`<table><tr><th>Corpus</th><th>p</th><th>Result at 0.05</th></tr>${rs.map(x=>`<tr><td>${esc(C[x.k].name)}${best&&best.k===x.k?' ★':''}</td><td>${x.r?fp(x.r.p):'n/a'}</td><td class="${x.r&&x.r.p<=.05?'bad':'ok'}">${!x.r?'too few units':x.r.p<=.05?'rejected':'not rejected'}</td></tr>`).join('')}</table>
+ <p class="m">★ = highest p. "Rejected" means same-author is unlikely; "not rejected" only means the evidence is insufficient to rule it out, not that this corpus's author wrote it. Corpus units sharing verses with this text are excluded from the comparison.</p>`},30)}
+async function hebrew(id){$('#ix').textContent='Fetching from Open Scriptures…';const out=[];
+ try{const vs=Stylo.verses(U[id].ranges),docs={};
+ for(const [b,c,v] of vs){if(!docs[b]){const t=await (await fetch(BR+b+'.xml')).text(),d=new DOMParser().parseFromString(t,'text/xml'),m={};
+  d.querySelectorAll('verse').forEach(e=>{const o=e.getAttribute('osisID');if(o)m[o.split('.').slice(-2).join('.')]=[...e.querySelectorAll('w')].map(w=>w.textContent.replace(/\//g,'')).join(' ')});docs[b]=m}
+  out.push(`<b>${b} ${c}:${v}</b> ${esc(docs[b][c+'.'+v]||'')}`)}
+ $('#ix').innerHTML='<div class="heb">'+out.join('<br>')+'</div>'}catch(e){$('#ix').innerHTML='<span class="bad">Could not fetch the text: '+esc(e.message)+'</span>'}}
+document.addEventListener('click',e=>{const t=e.target.closest('[data-a]');if(!t)return;const a=t.dataset.a,i=t.dataset.id;
+ ({vc:viewCorpus,ic:runInternal,vu:viewUnit,tu:testUnit,hb:hebrew})[a](i)});
+$('#uf').oninput=render;
+$('#us').onclick=()=>{try{const n=$('#un').value.trim(),r=$('#ur').value.split('\n').map(x=>x.trim()).filter(Boolean);if(!n||!r.length)throw new Error('Name and at least one range are required.');
+ const u={name:n,ranges:r,ref:$('#uref').checked};if(!Stylo.ucount(u).tokens)throw new Error('Those ranges contain no text.');
+ my.units['u'+Date.now()]=u;save();render();$('#um').textContent='Saved.';$('#un').value=$('#ur').value=''}catch(e){$('#um').textContent=e.message}};
+$('#cb').onclick=()=>{try{const n=$('#cn').value.trim(),ids=[...$('#cs').selectedOptions].map(o=>o.value);if(!n)throw new Error('Name required.');
+ const er=Stylo.validate(ids,U);if(er.length)throw new Error(er.join(' '));my.corpora['c'+Date.now()]={name:n,units:ids};save();render();$('#cm').textContent='Saved.'}catch(e){$('#cm').textContent=e.message}};
+$('#ex').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(my,null,1)],{type:'application/json'}));a.download='my-stylometry-definitions.json';a.click()};
+$('#im').onchange=async e=>{try{const j=JSON.parse(await e.target.files[0].text());Object.assign(my.units,j.units||{});Object.assign(my.corpora,j.corpora||{});save();render()}catch(x){alert('Import failed: '+x.message)}};
+(async()=>{try{const [ix,cp]=await Promise.all([fetch('data/index.json').then(r=>r.json()),fetch('data/corpora.json').then(r=>r.json())]);
+ Stylo.init(ix);base=cp;load();render();$('#st').textContent='Ready.'}catch(e){$('#st').textContent='Failed to load data: '+e.message}})();
+</script></body></html>
