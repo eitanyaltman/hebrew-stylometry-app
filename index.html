@@ -6,7 +6,7 @@
 @media(prefers-color-scheme:dark){:root{--bg:#161616;--fg:#e8e8e8;--mut:#9a9a9a;--bd:#444;--ac:#6ea8ff;--ok:#56d364;--bad:#ff7b72;--card:#202020;--on:#25344d;--wn:#e3a008}}
 body{margin:0 auto;padding:12px;max-width:1040px;background:var(--bg);color:var(--fg);font:14px/1.45 system-ui,sans-serif}
 h1{font-size:20px;margin:0 0 4px}h2{font-size:15px;margin:0 0 6px}.m{color:var(--mut);font-size:12px}a{color:var(--ac)}
-.g{display:flex;gap:12px;flex-wrap:wrap}.g>section{flex:1 1 280px;min-width:0}.g>section.wide{flex:2 1 420px}
+.g{display:flex;gap:12px;flex-wrap:wrap}.g>*{flex:1 1 0;min-width:340px;box-sizing:border-box}.g .col>section:first-child{margin-top:0}#ut.tall{max-height:78vh}
 section,details.box{border:1px solid var(--bd);border-radius:6px;padding:8px;margin:8px 0;background:var(--card)}
 details.box>summary{cursor:pointer}
 .l{max-height:300px;overflow:auto}.tall{max-height:420px;overflow:auto}
@@ -35,10 +35,14 @@ input[type=checkbox],input[type=file]{width:auto}
 
 <div id="p-home" class="pane">
 <div class="g">
+<div class="col">
 <section><h2>Corpora <span class="m">(a group of units)</span></h2><div id="cl" class="l"></div></section>
-<section class="wide"><h2>Units <span class="m">(a text made of verse ranges)</span></h2><input id="uf" placeholder="Filter units (e.g. Deut 6, Exod)…"><div id="ut" class="tall tree"></div></section>
-</div>
 <section><h2>Sections <span class="m">(a set of units, each tested separately)</span></h2><div id="hl" class="l"></div></section>
+</div>
+<div class="col">
+<section><h2>Units <span class="m">(a text made of verse ranges)</span></h2><input id="uf" placeholder="Filter units (e.g. Deut 6, Exod)…"><div id="ut" class="tall tree"></div></section>
+</div>
+</div>
 <section id="out" class="t"><span class="m">Click View on a corpus or unit.</span></section>
 </div>
 
