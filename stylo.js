@@ -61,6 +61,6 @@
     ['1Sam', '1 Samuel'], ['2Sam', '2 Samuel'], ['1Kgs', '1 Kings'], ['2Kgs', '2 Kings']];
   // one auto-generated unit per complete chapter, id "Book.chapter" (e.g. "Deut.6")
   function chapterUnits() { const out = {}; for (const [k, n] of BOOKS) for (const c of chapters(k)) out[k + '.' + c] = { name: n + ' ' + c, ranges: [k + ' ' + c], ref: false, auto: true, book: k, ch: c }; return out; }
-  const api = { init, verses, ucount, quickTokens, chapters, chapterUnits, BOOKS, testVs, internal, validate, sum, LIM, S };
+  const api = { init, verses, ucount, quickTokens, chapters, chapterUnits, BOOKS, testVs, internal, validate, sum, tsf, LIM, S };
   if (typeof module !== 'undefined') module.exports = api; else g.Stylo = api;
 })(this);

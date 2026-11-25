@@ -130,6 +130,7 @@
   "DD": {
    "name": "D** — Deuteronomic + Deuteronomistic combined (D* and DtrH* without Deut 28, Josh 6, 1 Kgs 8, Judg 6)",
    "short": "D**",
+   "notes": "Reference pair with P* for the HC discrepancy test. Excluded as poor or doubtful examples of the source: Deut 28; Josh 6 (Joshua is widely seen as containing priestly or post-P material); 1 Kgs 8 (DtrH classification not a consensus; rejected by every corpus); Judg 6 (probably redacted from an older Gideon source).",
    "units": [
     "Deut.6",
     "Deut.12",
