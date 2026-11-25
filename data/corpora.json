@@ -59,7 +59,9 @@
  },
  "corpora": {
   "D": {
-   "name": "D — Deuteronomy, old layer (GTC from the paper)",
+   "name": "D* — Deuteronomy, old layer (GTC from paper)",
+   "short": "D*",
+   "notes": "The paper's D corpus (Table S1): the old layer of Deuteronomy, following Preuss. Deut 6, 12–13, 15–16, 18–19, 26, 28.",
    "units": [
     "Deut.6",
     "Deut.12",
@@ -70,11 +72,12 @@
     "Deut.19",
     "Deut.26",
     "Deut.28"
-   ],
-   "short": "D*"
+   ]
   },
   "DtrH": {
-   "name": "DtrH — Deuteronomistic History (GTC from the paper)",
+   "name": "DtrH* — Deuteronomistic History (GTC from paper)",
+   "short": "DtrH*",
+   "notes": "The paper's DtrH corpus (Table S1): passages the authors take as Deuteronomistic compositions in Deuteronomy to Kings. Deut 8–11, 27; Josh 1, 5, 6, 12, 23; Judg 2, 6; 2 Sam 7; 1 Kgs 8; 2 Kgs 17:1–21, 22–25.",
    "units": [
     "Deut.8",
     "Deut.9",
@@ -95,11 +98,12 @@
     "2Kgs.23",
     "2Kgs.24",
     "2Kgs.25"
-   ],
-   "short": "DtrH*"
+   ]
   },
   "P": {
-   "name": "P — Priestly (GTC from the paper)",
+   "name": "P* — Priestly (GTC from paper)",
+   "short": "P*",
+   "notes": "The paper's P corpus (Table S1), following Nihan for the end of Pg: Gen 17; Exod 6, 16, 25–31, 35–40; Lev 1–4, 8–9, plus P auxiliary narration as a reference-only unit. The preprint lists Gen 1 where Table S1 has Lev 4; we follow Table S1.",
    "units": [
     "Gen.17",
     "Exod.6",
@@ -124,13 +128,12 @@
     "Lev.8",
     "Lev.9",
     "P-aux"
-   ],
-   "short": "P*"
+   ]
   },
   "DD": {
-   "name": "D** — Deuteronomic + Deuteronomistic combined (D* and DtrH* without Deut 28, Josh 6, 1 Kgs 8, Judg 6)",
+   "name": "D** — D* + DtrH*, reduced",
    "short": "D**",
-   "notes": "Reference pair with P* for the HC discrepancy test. Excluded as poor or doubtful examples of the source: Deut 28; Josh 6 (Joshua is widely seen as containing priestly or post-P material); 1 Kgs 8 (DtrH classification not a consensus; rejected by every corpus); Judg 6 (probably redacted from an older Gideon source).",
+   "notes": "D* and DtrH* combined, without Deut 28, Josh 6, 1 Kgs 8 and Judg 6. Reference pair with P* for the HC discrepancy test. Excluded as poor or doubtful examples of the source: Deut 28; Josh 6 (Joshua is widely seen as containing priestly or post-P material); 1 Kgs 8 (DtrH classification not a consensus; rejected by every corpus); Judg 6 (probably redacted from an older Gideon source).",
    "units": [
     "Deut.6",
     "Deut.12",
@@ -161,6 +164,7 @@
   "DIntro": {
    "name": "Deuteronomy intro (Deut 1–11)",
    "short": "Dtr Intro",
+   "notes": "The introductory speeches of Deuteronomy, chapters 1–11. Deut 8–11 are also DtrH* chapters.",
    "units": [
     "Deut.1",
     "Deut.2",
@@ -177,6 +181,8 @@
   },
   "DLaw": {
    "name": "Deuteronomic Law Code (Deut 12–26)",
+   "short": "Dtr Law",
+   "notes": "The law code of Deuteronomy, chapters 12–26. Several chapters are also D* chapters.",
    "units": [
     "Deut.12",
     "Deut.13",
@@ -193,11 +199,12 @@
     "Deut.24",
     "Deut.25",
     "Deut.26"
-   ],
-   "short": "Dtr Law"
+   ]
   },
   "Lev": {
    "name": "Leviticus (entire book)",
+   "short": "Leviticus",
+   "notes": "All of Leviticus, including the Holiness Code (Lev 17–26). Lev 12 is reference-only because it has under 250 tokens.",
    "units": [
     "Lev.1",
     "Lev.2",
@@ -226,11 +233,12 @@
     "Lev.25",
     "Lev.26",
     "Lev.27"
-   ],
-   "short": "Leviticus"
+   ]
   },
   "ExNar": {
-   "name": "Exodus story (Exod 1–14 without ch. 6)",
+   "name": "Exodus story (Exod 1–14)",
+   "short": "Exodus story",
+   "notes": "Exodus 1–14 without chapter 6, which is a P* chapter. Contains some priestly material (for example in Exod 12).",
    "units": [
     "Exod.1",
     "Exod.2",
@@ -245,8 +253,7 @@
     "Exod.12",
     "Exod.13",
     "Exod.14"
-   ],
-   "short": "Exodus story"
+   ]
   }
  }
 }
