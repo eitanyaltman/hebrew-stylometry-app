@@ -33,6 +33,7 @@ input[type=checkbox],input[type=file]{width:auto}
 </style></head><body>
 <h1>Hebrew Stylometry (Higher Criticism)</h1>
 <div class="m">Reproduces the method of Faigenbaum-Golovin et al. (PLOS ONE 2025) on the Open Scriptures Hebrew Bible (CC BY). The three built-in corpora are a reproduction, not an exact replica of the paper's numbers. <span id="st">Loading…</span> &middot; <a href="validation.html">How closely does this match the paper? &rarr;</a></div>
+<label class="m" style="display:inline-flex;gap:6px;align-items:center;margin-top:4px" title="Proper names, gentilic nouns and pronoun suffixes track narration and characters (genre) more than authorship. Excluding them removes about 17% of tokens. The paper includes them, so leave this off to compare with the paper."><input type="checkbox" id="mask"> Exclude proper names, gentilic nouns and pronoun suffixes from all tests</label>
 
 <div class="tabs" role="tablist"><button data-a="tab" data-t="home" class="on">Home</button><button data-a="tab" data-t="unit">Unit builder</button><button data-a="tab" data-t="sec">Section builder</button><button data-a="tab" data-t="corp">Corpus builder</button></div>
 
@@ -96,6 +97,10 @@ input[type=checkbox],input[type=file]{width:auto}
 <script>
 const $=s=>document.querySelector(s),BR='https://raw.githubusercontent.com/openscriptures/morphhb/master/wlc/';
 let LS=null;try{LS=window.localStorage}catch(e){}
+let RAW=null,MASKED=false;
+function initIdx(){if(!MASKED){Stylo.init(RAW);return}const drop=new Set(RAW.features.map((f,i)=>/^<N[pg]>$|^\[Sp/.test(f)?i:-1).filter(i=>i>=0)),books={};
+ for(const b in RAW.books){const o={};for(const v in RAW.books[b]){const a=RAW.books[b][v],r=[];for(let i=0;i<a.length;i+=2)if(!drop.has(a[i]))r.push(a[i],a[i+1]);o[v]=r}books[b]=o}
+ Stylo.init({...RAW,books})}
 let base,CHU={},U={},C={},mem={},my={units:{},corpora:{},sections:{}},SEC={};
 const openSt={},selC=new Set(),selS=new Set(),selOf=m=>m==='picks'?selS:selC,pick=new Set(),docs={};
 const pb=p=>p===null?'':p<=.01?'b2':p<=.05?'b3':p<=.10?'b4':p<=.30?'':p<=.60?'b6':'b7';
@@ -142,7 +147,8 @@ function render(){merge();
  const mu=Object.keys(my.units),mc=Object.keys(my.corpora);
  $('#ul').innerHTML=mu.length?mu.map(id=>`<div class="r"><span>${esc(my.units[id].name)}${my.units[id].ref?' <span class="m">(reference)</span>':''} <span class="m">${fx(tok(id))} tokens · ${esc(my.units[id].ranges.join('; ').slice(0,60))}</span></span><span class="nw"><button data-a="eu" data-id="${esc(id)}">Edit</button> <button data-a="du" data-id="${esc(id)}" title="Delete">&#10005;</button></span></div>`).join(''):'<span class="m">None yet. Units you save appear here.</span>';
  $('#cu').innerHTML=mc.length?mc.map(id=>`<div class="r"><span>${esc(my.corpora[id].name)} <span class="m">${my.corpora[id].units.length} units</span></span><span class="nw"><button data-a="ec" data-id="${esc(id)}">Edit</button> <button data-a="dc" data-id="${esc(id)}" title="Delete">&#10005;</button></span></div>`).join(''):'<span class="m">None yet. Corpora you save appear here.</span>'}
-const show=h=>{$('#out').innerHTML=h;$('#out').scrollIntoView({block:'nearest',behavior:'smooth'})};
+const MASKNOTE='<p class="warn m">Names, gentilics and pronoun suffixes excluded (not the paper\'s setup).</p>';
+const show=h=>{$('#out').innerHTML=(MASKED?MASKNOTE:'')+h;$('#out').scrollIntoView({block:'nearest',behavior:'smooth'})};
 
 /* ---------- views ---------- */
 function viewCorpus(id){const c=C[id],ids=c.units,F=new Set();let tk=0;
@@ -336,7 +342,7 @@ function whyOpen(u,k,label){const ov=$('#wx');ov.hidden=false;$('#wxb').innerHTM
 function whyDraw(){const {e,k,label,all}=WX,r=e.r,t=(r.x-r.mean)/(r.sd*Math.sqrt(1+1/r.m)),F=Stylo.S.feats,nT=e.nA,nC=e.nB;
  const ws=all?e.words:e.words.slice(0,25),up=e.words.filter(w=>w.a>w.e).length;
  const rows=ws.map((w,i)=>{const f=F[w.w],L=flab(f),more=w.a>w.e;return `<tr><td>${i+1}</td><td class="heb" style="font-size:18px;text-align:right">${esc(L.h)}</td><td>${esc(L.g)} <span class="m">${esc(f)}</span></td><td>${w.a}</td><td>${w.e.toFixed(1)}</td><td>${w.b}</td><td>${(1000*w.a/nT).toFixed(1)}</td><td>${(1000*w.b/nC).toFixed(1)}</td><td class="${more?'ok':'warn'}">${more?'▲ more':'▼ less'}</td><td>${fp(w.p)}</td></tr>`}).join('');
- $('#wxb').innerHTML=`<h2>${esc(label)} vs ${esc(C[k].short||C[k].name)}</h2>
+ $('#wxb').innerHTML=`${MASKED?MASKNOTE:''}<h2>${esc(label)} vs ${esc(C[k].short||C[k].name)}</h2>
  <p>p = <b>${fp(r.p)}</b> · this text's HC discrepancy <b>${r.x.toFixed(2)}</b> · the corpus's own units score ${r.mean.toFixed(2)} ± ${r.sd.toFixed(2)} (leave-one-out, ${r.m} units) · t = <b>${ft(t)}</b></p>
  <p class="m">Why the p is what it is: the HC score below comes from the words listed, and the p-value compares that score with how far the corpus's own units sit from the rest of it. A large HC against a corpus whose units vary a lot can still give a moderate p.</p>
  <p><b>${e.k}</b> discriminating words (the HC threshold set) out of ${fx(e.N)} words present in the pair; ${up} used more in this text than expected, ${e.k-up} less. Text ${fx(nT)} tokens, corpus ${fx(nC)} tokens${e.nRefs?' (including reference-only text)':''}.</p>
@@ -365,6 +371,7 @@ $('#sb').onclick=()=>{try{const n=$('#sn').value.trim(),ids=Object.keys(U).filte
  const was=editS;my.sections[was||'s'+Date.now()]={name:n,notes:$('#snote').value.trim()||undefined,units:ids};endSEdit();save();selS.clear();$('#sn').value='';$('#snote').value='';render();$('#sm').textContent=was?'Changes saved.':'Saved.'}catch(e){$('#sm').textContent=e.message}};
 $('#ex').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(my,null,1)],{type:'application/json'}));a.download='my-stylometry-definitions.json';a.click()};
 $('#im').onchange=async e=>{try{const j=JSON.parse(await e.target.files[0].text());Object.assign(my.units,j.units||{});Object.assign(my.corpora,j.corpora||{});Object.assign(my.sections,j.sections||{});save();render()}catch(x){alert('Import failed: '+x.message)}};
+$('#mask').onchange=e=>{MASKED=e.target.checked;try{LS&&LS.setItem('stylo-mask',MASKED?'1':'0')}catch(x){}initIdx();HCR=null;render();$('#out').innerHTML='<p class="m">'+(MASKED?'Names, gentilics and pronoun suffixes are now excluded.':'All features are included again (the paper\'s setup).')+' Open a unit, section or corpus to run its tests with this setting.</p>'};
 (async()=>{try{const [ix,cp]=await Promise.all([fetch('data/index.json').then(r=>r.json()),fetch('data/corpora.json').then(r=>r.json())]);
- Stylo.init(ix);base=cp;CHU=Stylo.chapterUnits();load();render();drawPicker();$('#st').textContent='Ready.'}catch(e){$('#st').textContent='Failed to load data: '+e.message}})();
+ RAW=ix;MASKED=!!(LS&&LS.getItem('stylo-mask')==='1');$('#mask').checked=MASKED;initIdx();base=cp;CHU=Stylo.chapterUnits();load();render();drawPicker();$('#st').textContent='Ready.'}catch(e){$('#st').textContent='Failed to load data: '+e.message}})();
 </script></body></html>

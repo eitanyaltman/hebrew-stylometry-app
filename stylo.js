@@ -22,7 +22,7 @@
     const xp = dHC(T, C), xs = units.map(u => { const E = new Float64Array(F); for (let i = 0; i < F; i++) E[i] = C[i] + T[i] - u[i]; return dHC(u, E); });
     const m = xs.length, mean = sum(xs) / m, sd = Math.sqrt(xs.reduce((s, x) => s + (x - mean) ** 2, 0) / (m - 1)), t = (xp - mean) / (sd * Math.sqrt(1 + 1 / m));
     return { p: tsf(t, m - 1), x: xp, mean, sd, m }; }
-  function init(idx) { S.idx = idx.books; S.feats = idx.features; S.F = idx.features.length; S.chap = {};
+  function init(idx) { S.cache = {}; S.qt = {}; S.idx = idx.books; S.feats = idx.features; S.F = idx.features.length; S.chap = {};
     for (const b in S.idx) { S.chap[b] = {}; for (const k in S.idx[b]) { const [c, v] = k.split('.').map(Number); (S.chap[b][c] = S.chap[b][c] || []).push(v); } }
     for (const b in S.chap) for (const c in S.chap[b]) S.chap[b][c].sort((x, y) => x - y);
     S.cache = {}; S.qt = {}; }
