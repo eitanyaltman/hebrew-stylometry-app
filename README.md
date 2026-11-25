@@ -9,3 +9,4 @@ Built-in corpora live in `data/corpora.json`; the verse index is `data/index.jso
 - Unit builder: type ranges or pick verses from a book → chapter → verse tree; Preview Hebrew.
 - `validation.html`: results versus the paper. Regenerate with `node tools/build-validation.js` (run from the repo root).
 - Add more books to the unit tree by extending `BOOKS` in `stylo.js`.
+- Sections (V2d): a set of units, each tested separately against every corpus, for long texts that are too big for a single test. Build them in the Section builder tab; units over 1,200 tokens now show a warning.

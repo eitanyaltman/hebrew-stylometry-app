@@ -2,8 +2,8 @@
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Hebrew Stylometry (Higher Criticism)</title>
 <style>
-:root{color-scheme:light dark;--bg:#fff;--fg:#1a1a1a;--mut:#666;--bd:#ccc;--ac:#1f5fbf;--ok:#1a7f37;--bad:#b3261e;--card:#f6f6f6;--on:#dce8fb}
-@media(prefers-color-scheme:dark){:root{--bg:#161616;--fg:#e8e8e8;--mut:#9a9a9a;--bd:#444;--ac:#6ea8ff;--ok:#56d364;--bad:#ff7b72;--card:#202020;--on:#25344d}}
+:root{color-scheme:light dark;--bg:#fff;--fg:#1a1a1a;--mut:#666;--bd:#ccc;--ac:#1f5fbf;--ok:#1a7f37;--bad:#b3261e;--card:#f6f6f6;--on:#dce8fb;--wn:#a15c00}
+@media(prefers-color-scheme:dark){:root{--bg:#161616;--fg:#e8e8e8;--mut:#9a9a9a;--bd:#444;--ac:#6ea8ff;--ok:#56d364;--bad:#ff7b72;--card:#202020;--on:#25344d;--wn:#e3a008}}
 body{margin:0 auto;padding:12px;max-width:1040px;background:var(--bg);color:var(--fg);font:14px/1.45 system-ui,sans-serif}
 h1{font-size:20px;margin:0 0 4px}h2{font-size:15px;margin:0 0 6px}.m{color:var(--mut);font-size:12px}a{color:var(--ac)}
 .g{display:flex;gap:12px;flex-wrap:wrap}.g>section{flex:1 1 280px;min-width:0}.g>section.wide{flex:2 1 420px}
@@ -18,7 +18,7 @@ input,textarea{background:var(--bg);color:var(--fg);border:1px solid var(--bd);b
 input[type=checkbox],input[type=file]{width:auto}
 .tg{display:inline-flex;gap:0;margin:4px 0}.tg button{border-radius:0}.tg button:first-child{border-radius:4px 0 0 4px}.tg button:last-child{border-radius:0 4px 4px 0}
 .t{overflow-x:auto}table{border-collapse:collapse;width:100%}td,th{border-bottom:1px solid var(--bd);padding:3px 6px;text-align:left}
-.ok{color:var(--ok)}.bad{color:var(--bad)}
+.ok{color:var(--ok)}.bad{color:var(--bad)}.warn{color:var(--wn)}tr.sm td{border-top:2px solid var(--bd)}tr.sm~tr.sm td{border-top:1px solid var(--bd)}
 .tag{font-size:11px;border:1px solid var(--bd);border-radius:8px;padding:0 5px;color:var(--mut)}
 .tree details>summary{cursor:pointer;padding:2px 0}.gb{padding-left:16px}.vb{padding:2px 0 6px 16px}
 .pk{max-height:300px;overflow:auto;border:1px solid var(--bd);border-radius:4px;padding:4px 8px;margin:4px 0;background:var(--bg)}
@@ -31,13 +31,14 @@ input[type=checkbox],input[type=file]{width:auto}
 <h1>Hebrew Stylometry (Higher Criticism)</h1>
 <div class="m">Reproduces the method of Faigenbaum-Golovin et al. (PLOS ONE 2025) on the Open Scriptures Hebrew Bible (CC BY). The three built-in corpora are a reproduction, not an exact replica of the paper's numbers. <span id="st">Loading…</span> &middot; <a href="validation.html">How closely does this match the paper? &rarr;</a></div>
 
-<div class="tabs" role="tablist"><button data-a="tab" data-t="home" class="on">Home</button><button data-a="tab" data-t="unit">Unit builder</button><button data-a="tab" data-t="corp">Corpus builder</button></div>
+<div class="tabs" role="tablist"><button data-a="tab" data-t="home" class="on">Home</button><button data-a="tab" data-t="unit">Unit builder</button><button data-a="tab" data-t="corp">Corpus builder</button><button data-a="tab" data-t="sec">Section builder</button></div>
 
 <div id="p-home" class="pane">
 <div class="g">
 <section><h2>Corpora <span class="m">(a group of units)</span></h2><div id="cl" class="l"></div></section>
 <section class="wide"><h2>Units <span class="m">(a text made of verse ranges)</span></h2><input id="uf" placeholder="Filter units (e.g. Deut 6, Exod)…"><div id="ut" class="tall tree"></div></section>
 </div>
+<section><h2>Sections <span class="m">(a set of units, each tested separately)</span></h2><div id="hl" class="l"></div></section>
 <section id="out" class="t"><span class="m">Click View on a corpus or unit.</span></section>
 </div>
 
@@ -66,48 +67,62 @@ input[type=checkbox],input[type=file]{width:auto}
 <div class="m"><span id="cc">0 units selected</span>. Minimums: 5 testable units, 5,000 tokens, 250 tokens per unit.</div>
 <button id="cb">Save corpus</button> <button id="cx" hidden data-a="ccancel">Cancel edit / new corpus</button> <span id="cm" class="m"></span></section></div>
 
-<div><button id="ex">Export my units/corpora</button> <label class="m">Import: <input type="file" id="im" accept=".json"></label></div>
+<div id="p-sec" class="pane" hidden>
+<section><h2>Your custom sections</h2><div id="sl" class="l"></div></section>
+<section><h2 id="sh">Section builder <span class="m">(a set of units, each tested separately)</span></h2>
+<p class="m">The method is calibrated on chapter-sized texts (roughly 400–1,000 tokens), and long texts give p-values that are too low. To test a long text, cut it into several chapter-sized units (Unit builder), group them here, and test them one by one. Nothing is pooled: each unit gets its own p-value against each corpus.</p>
+<input id="sn" placeholder="Name">
+<input id="sf" placeholder="Filter units…">
+<div id="sxt" class="tall tree"></div>
+<div class="m" id="scn">0 units selected</div>
+<button id="sb">Save section</button> <button id="sk" hidden data-a="scancel">Cancel edit / new section</button> <span id="sm" class="m"></span></section></div>
+
+<div><button id="ex">Export my units/corpora/sections</button> <label class="m">Import: <input type="file" id="im" accept=".json"></label></div>
 <p class="m">Units and corpora you create are saved in this browser only. Export them to keep a copy or move them elsewhere.</p>
 
 <script src="stylo.js"></script>
 <script>
 const $=s=>document.querySelector(s),BR='https://raw.githubusercontent.com/openscriptures/morphhb/master/wlc/';
 let LS=null;try{LS=window.localStorage}catch(e){}
-let base,CHU={},U={},C={},mem={},my={units:{},corpora:{}};
-const openSt={},selC=new Set(),pick=new Set(),docs={};
+let base,CHU={},U={},C={},mem={},my={units:{},corpora:{},sections:{}},SEC={};
+const openSt={},selC=new Set(),selS=new Set(),selOf=m=>m==='picks'?selS:selC,pick=new Set(),docs={};
 const rc=(p,a)=>`<td class="${p!==null&&p<=a?'bad':'ok'}">${p===null?'':p<=a?'rejected':'not rejected'}</td>`;
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),fp=p=>p<1e-3?p.toExponential(1):p.toFixed(3),fx=x=>x.toLocaleString();
 const bname=k=>(Stylo.BOOKS.find(b=>b[0]===k)||[k,k])[1];
 const tok=id=>{try{return Stylo.quickTokens(U[id].ranges)}catch(e){return 0}};
 const lab=id=>U[id].auto?'Chapter '+U[id].ch:U[id].name;
 const parseRanges=t=>t.split(/[\n;]+/).map(s=>s.trim()).filter(Boolean);
-function load(){try{const j=JSON.parse((LS&&LS.getItem('stylo'))||'{}');my.units=j.units||{};my.corpora=j.corpora||{}}catch(e){}}
+function load(){try{const j=JSON.parse((LS&&LS.getItem('stylo'))||'{}');my.units=j.units||{};my.corpora=j.corpora||{};my.sections=j.sections||{}}catch(e){}}
 function save(){try{LS&&LS.setItem('stylo',JSON.stringify(my))}catch(e){}}
-function merge(){U={...CHU,...base.units,...my.units};C={...base.corpora,...my.corpora};mem={};for(const k in base.corpora)for(const id of base.corpora[k].units)(mem[id]=mem[id]||[]).push(k)}
+function merge(){U={...CHU,...base.units,...my.units};C={...base.corpora,...my.corpora};SEC={...(base.sections||{}),...my.sections};mem={};for(const k in base.corpora)for(const id of base.corpora[k].units)(mem[id]=mem[id]||[]).push(k)}
 
 /* ---------- grouped unit trees (browse list and corpus picker) ---------- */
 function groups(){const custom=Object.keys(U).filter(id=>!U[id].auto);
  return [{k:'custom',t:'Custom',ids:custom,w:'unit'}].concat(Stylo.BOOKS.map(([k,n])=>({k,t:n,ids:Stylo.chapters(k).map(c=>k+'.'+c),w:'chapter'})))}
 function rowB(id){const u=U[id],mine=!!my.units[id];
  return `<div class="r"><span>${esc(lab(id))}${u.ref?' <span class="m">(reference)</span>':''} <span class="m">${fx(tok(id))} tokens</span>${(mem[id]||[]).map(k=>` <span class="tag">${esc(k)}</span>`).join('')}${mine?' <span class="tag">mine</span>':''}</span><span class="nw"><button data-a="vu" data-id="${esc(id)}">View</button>${mine?` <button data-a="du" data-id="${esc(id)}" title="Delete this unit">&#10005;</button>`:''}</span></div>`}
-function rowP(id){const u=U[id];
- return `<label class="r"><span><input type="checkbox" data-u="${esc(id)}"${selC.has(id)?' checked':''}> ${esc(lab(id))}${u.ref?' <span class="m">(reference)</span>':''} <span class="m">${fx(tok(id))} tokens</span>${(mem[id]||[]).map(k=>` <span class="tag">${esc(k)}</span>`).join('')}${u.auto?'':` <span class="m">${esc(u.ranges.join('; ').slice(0,56))}</span>`}</span></label>`}
+function rowP(id,mode){const u=U[id];
+ return `<label class="r"><span><input type="checkbox" data-u="${esc(id)}"${selOf(mode).has(id)?' checked':''}> ${esc(lab(id))}${u.ref?' <span class="m">(reference)</span>':''} <span class="m">${fx(tok(id))} tokens</span>${(mem[id]||[]).map(k=>` <span class="tag">${esc(k)}</span>`).join('')}${u.auto?'':` <span class="m">${esc(u.ranges.join('; ').slice(0,56))}</span>`}</span></label>`}
 function fill(d){if(d._done||!d.open)return;d._done=true;
- const ctl=d._mode==='pick'?`<div class="ctl"><button data-a="gall" data-g="${esc(d.dataset.g)}">Select all</button> <button data-a="gnone" data-g="${esc(d.dataset.g)}">None</button></div>`:'';
- d.querySelector('.gb').innerHTML=ctl+(d._ids.length?d._ids.map(d._mode==='pick'?rowP:rowB).join(''):'<span class="m">Nothing here yet. Units you build with fewer than a full chapter appear here.</span>');updSel(d)}
-function updSel(d){if(d._mode!=='pick')return;const n=d._ids.filter(i=>selC.has(i)).length;d.querySelector('.sc').textContent=n?` · ${n} selected`:''}
+ const ctl=d._mode!=='browse'?`<div class="ctl"><button data-a="gall" data-g="${esc(d.dataset.g)}">Select all</button> <button data-a="gnone" data-g="${esc(d.dataset.g)}">None</button></div>`:'';
+ d.querySelector('.gb').innerHTML=ctl+(d._ids.length?d._ids.map(id=>d._mode==='browse'?rowB(id):rowP(id,d._mode)).join(''):'<span class="m">Nothing here yet. Units you build with fewer than a full chapter appear here.</span>');updSel(d)}
+function updSel(d){if(d._mode==='browse')return;const n=d._ids.filter(i=>selOf(d._mode).has(i)).length;d.querySelector('.sc').textContent=n?` · ${n} selected`:''}
 function drawTree(root,mode,q){q=(q||'').trim().toLowerCase();root.textContent='';
- for(const g of groups()){const ids=q?g.ids.filter(id=>(U[id].name+' '+U[id].ranges.join(' ')).toLowerCase().includes(q)):g.ids;if(q&&!ids.length)continue;
+ for(const g of groups()){const src=mode==='picks'?g.ids.filter(id=>!U[id].ref):g.ids,ids=q?src.filter(id=>(U[id].name+' '+U[id].ranges.join(' ')).toLowerCase().includes(q)):src;if(q&&!ids.length)continue;
   const d=document.createElement('details'),key=mode+g.k;d.dataset.g=g.k;d._ids=ids;d._mode=mode;d.open=!!q||(key in openSt?openSt[key]:g.k==='custom');
   d.innerHTML=`<summary><b>${esc(g.t)}</b> <span class="m">${ids.length} ${g.w}${ids.length===1?'':'s'}</span><span class="sc m"></span></summary><div class="gb"></div>`;
   root.appendChild(d);fill(d)}}
-for(const id of ['ut','ct'])$('#'+id).addEventListener('toggle',e=>{const d=e.target;if(d.tagName!=='DETAILS'||!d.dataset.g)return;openSt[d._mode+d.dataset.g]=d.open;fill(d)},true);
-$('#ct').addEventListener('change',e=>{const id=e.target.dataset.u;if(!id)return;e.target.checked?selC.add(id):selC.delete(id);
- const d=e.target.closest('details');if(d)updSel(d);selCount()});
+for(const id of ['ut','ct','sxt'])$('#'+id).addEventListener('toggle',e=>{const d=e.target;if(d.tagName!=='DETAILS'||!d.dataset.g)return;openSt[d._mode+d.dataset.g]=d.open;fill(d)},true);
+for(const [root,set,cnt] of [['#ct',selC,()=>selCount()],['#sxt',selS,()=>selSCount()]])$(root).addEventListener('change',e=>{const id=e.target.dataset.u;if(!id)return;e.target.checked?set.add(id):set.delete(id);
+ const d=e.target.closest('details');if(d)updSel(d);cnt()});
+function selSCount(){const ids=[...selS];$('#scn').textContent=ids.length+' unit'+(ids.length===1?'':'s')+' selected · '+fx(ids.reduce((a,i)=>a+tok(i),0))+' tokens'}
 function selCount(){$('#cc').textContent=selC.size+' unit'+(selC.size===1?'':'s')+' selected'}
 function render(){merge();
  $('#cl').innerHTML=Object.keys(C).map(k=>`<div class="r"><span>${esc(C[k].name)} <span class="m">${C[k].units.length} units${my.corpora[k]?' · mine':''}</span></span><span class="nw"><button data-a="vc" data-id="${esc(k)}">View</button>${my.corpora[k]?` <button data-a="dc" data-id="${esc(k)}" title="Delete this corpus">&#10005;</button>`:''}</span></div>`).join('');
- drawTree($('#ut'),'browse',$('#uf').value);drawTree($('#ct'),'pick',$('#cf').value);selCount();
+ drawTree($('#ut'),'browse',$('#uf').value);drawTree($('#ct'),'pick',$('#cf').value);drawTree($('#sxt'),'picks',$('#sf').value);selCount();selSCount();
+ const sk=Object.keys(SEC),secTok=k=>SEC[k].units.reduce((a,i)=>a+(U[i]?tok(i):0),0);
+ $('#hl').innerHTML=sk.length?sk.map(k=>`<div class="r"><span>${esc(SEC[k].name)} <span class="m">${SEC[k].units.length} units · ${fx(secTok(k))} tokens${my.sections[k]?' · mine':''}</span></span><span class="nw"><button data-a="vs" data-id="${esc(k)}">View</button>${my.sections[k]?` <button data-a="ds" data-id="${esc(k)}" title="Delete this section">&#10005;</button>`:''}</span></div>`).join(''):'<span class="m">None yet. Build one in the Section builder tab, for example 3–5 chapter-sized units cut from a long text.</span>';
+ $('#sl').innerHTML=Object.keys(my.sections).length?Object.keys(my.sections).map(k=>`<div class="r"><span>${esc(my.sections[k].name)} <span class="m">${my.sections[k].units.length} units · ${fx(secTok(k))} tokens</span></span><span class="nw"><button data-a="es" data-id="${esc(k)}">Edit</button> <button data-a="ds" data-id="${esc(k)}" title="Delete">&#10005;</button></span></div>`).join(''):'<span class="m">None yet. Sections you save appear here.</span>';
  const mu=Object.keys(my.units),mc=Object.keys(my.corpora);
  $('#ul').innerHTML=mu.length?mu.map(id=>`<div class="r"><span>${esc(my.units[id].name)}${my.units[id].ref?' <span class="m">(reference)</span>':''} <span class="m">${fx(tok(id))} tokens · ${esc(my.units[id].ranges.join('; ').slice(0,60))}</span></span><span class="nw"><button data-a="eu" data-id="${esc(id)}">Edit</button> <button data-a="du" data-id="${esc(id)}" title="Delete">&#10005;</button></span></div>`).join(''):'<span class="m">None yet. Units you save appear here.</span>';
  $('#cu').innerHTML=mc.length?mc.map(id=>`<div class="r"><span>${esc(my.corpora[id].name)} <span class="m">${my.corpora[id].units.length} units</span></span><span class="nw"><button data-a="ec" data-id="${esc(id)}">Edit</button> <button data-a="dc" data-id="${esc(id)}" title="Delete">&#10005;</button></span></div>`).join(''):'<span class="m">None yet. Corpora you save appear here.</span>'}
@@ -120,8 +135,19 @@ function viewCorpus(id){const c=C[id],ids=c.units,F=new Set();let tk=0;
 function runInternal(id){$('#ix').textContent='Running…';setTimeout(()=>{try{const res=Stylo.internal(C[id].units,U);let rej=0;
  const rows=res.map(x=>{const p=x.r?x.r.p:null;if(p!==null&&p<=.05)rej++;return `<tr><td>${esc(U[x.id].name)}</td><td>${fx(Stylo.ucount(U[x.id]).tokens)}</td><td>${p===null?'n/a':fp(p)}</td>${rc(p,.05)}${rc(p,.10)}</tr>`}).join('');
  $('#ix').innerHTML=`<p>Each testable unit against the rest of its own corpus (leave-one-out). Rejections: <b>${rej}</b> of ${res.length} (about 5% expected for a homogeneous corpus).</p><table><tr><th>Unit</th><th>Tokens</th><th>p</th><th>Result at 0.05</th><th>Result at 0.10</th></tr>${rows}</table>`}catch(e){$('#ix').innerHTML='<span class="bad">'+esc(e.message)+'</span>'}},30)}
-function viewUnit(id){const u=U[id],c=Stylo.ucount(u),w=[];if(c.tokens<250)w.push('Under 250 tokens: results may be unreliable.');if(c.vs.size<10)w.push('Under 10 verses: the paper reports poor accuracy for very short texts.');
+function viewUnit(id){const u=U[id],c=Stylo.ucount(u),w=[];if(c.tokens<250)w.push('Under 250 tokens: results may be unreliable.');if(c.tokens>1200)w.push('Long text ('+fx(c.tokens)+' tokens, about '+Math.round(c.tokens/600)+'× a typical chapter): the test is calibrated on chapter-sized texts, so p-values tend to come out too low. Consider cutting it into chapter-sized units and testing them as a section.');if(c.vs.size<10)w.push('Under 10 verses: the paper reports poor accuracy for very short texts.');
  show(`<h2>${esc(u.name)}</h2><p class="m">${esc(u.ranges.join('; '))}</p><p>${c.vs.size} verses · ${fx(c.tokens)} tokens · ${fx(c.distinct)} distinct features</p>${w.length?`<p class="bad">${w.join('<br>')}</p>`:''}<button data-a="tu" data-id="${esc(id)}">Test vs corpora</button> <button data-a="hb" data-id="${esc(id)}">Show Hebrew</button>${my.units[id]?` <button data-a="eu" data-id="${esc(id)}">Edit custom unit</button>`:''}<div id="ix"></div>`)}
+function viewSection(id){const s=SEC[id],ids=s.units.filter(i=>U[i]);let tk=0;const small=[];ids.forEach(i=>{const n=tok(i);tk+=n;if(n<250)small.push(U[i].name)});
+ show(`<h2>${esc(s.name)} <span class="m">(section)</span></h2><p>${ids.length} units · ${fx(tk)} tokens</p>${small.length?`<p class="bad">Under 250 tokens (results may be unreliable): ${small.map(esc).join(', ')}</p>`:''}<p class="m">${ids.map(i=>esc(U[i].name)+' ('+fx(tok(i))+')').join(', ')}</p><button data-a="ts" data-id="${esc(id)}">Test each unit vs corpora</button>${my.sections[id]?` <button data-a="es" data-id="${esc(id)}">Edit custom section</button>`:''}<div id="ix"></div>`)}
+function testSection(id){viewSection(id);$('#ix').textContent='Running…';setTimeout(()=>{try{const s=SEC[id],ids=s.units.filter(i=>U[i]),ks=Object.keys(C);
+ const R=ids.map(i=>ks.map(k=>{const r=Stylo.testVs(U[i],C[k].units,U);return r?r.p:null}));
+ const sh=k=>C[k].name.split(/ [—(]/)[0],cls=p=>p===null?'':p<=.05?'bad':p<=.10?'warn':'';
+ const col=c=>R.map(r=>r[c]).filter(p=>p!==null),med=a=>{if(!a.length)return null;const t=[...a].sort((x,y)=>x-y),m=t.length>>1;return t.length%2?t[m]:(t[m-1]+t[m])/2};
+ const votes=ks.map(()=>0);R.forEach(r=>{let b=-1;r.forEach((p,c)=>{if(p!==null&&(b<0||p>r[b]))b=c});if(b>=0)votes[b]++});
+ const sm=(l,f)=>`<tr class="sm"><td colspan="2"><b>${l}</b></td>${ks.map((k,c)=>`<td>${f(c)}</td>`).join('')}</tr>`;
+ $('#ix').innerHTML=`<div class="t"><table><tr><th>Unit</th><th>Tokens</th>${ks.map(k=>`<th title="${esc(C[k].name)}">${esc(sh(k))}</th>`).join('')}</tr>${ids.map((i,r)=>`<tr><td>${esc(U[i].name)}</td><td>${fx(tok(i))}</td>${R[r].map(p=>`<td class="${cls(p)}">${p===null?'n/a':fp(p)}</td>`).join('')}</tr>`).join('')}
+ ${sm('Rejected at 0.05',c=>col(c).filter(p=>p<=.05).length+'/'+col(c).length)}${sm('Rejected at 0.10',c=>col(c).filter(p=>p<=.10).length+'/'+col(c).length)}${sm('Median p',c=>{const m=med(col(c));return m===null?'n/a':fp(m)})}${sm('Best match (highest p)',c=>votes[c]+' unit'+(votes[c]===1?'':'s'))}</table></div>
+ <p class="m">Each unit is tested on its own, exactly like a single unit; nothing is pooled. Red: rejected at 0.05; amber: rejected at 0.10 only. Even for a homogeneous text about 1 unit in 20 is expected to be rejected at 0.05, so read the pattern across units rather than any single cell. Corpus units that share verses with a tested unit are left out for that test.</p>`}catch(e){$('#ix').innerHTML='<span class="bad">'+esc(e.message)+'</span>'}},30)}
 function testUnit(id){viewUnit(id);$('#ix').textContent='Running…';setTimeout(()=>{try{const rs=Object.keys(C).map(k=>({k,r:Stylo.testVs(U[id],C[k].units,U)}));
  const best=rs.filter(x=>x.r).sort((a,b)=>b.r.p-a.r.p)[0];
  $('#ix').innerHTML=`<table><tr><th>Corpus</th><th>p</th><th>Result at 0.05</th><th>Result at 0.10</th></tr>${rs.map(x=>`<tr><td>${esc(C[x.k].name)}${best&&best.k===x.k?' ★':''}</td><td>${x.r?fp(x.r.p):'n/a'}</td>${x.r?rc(x.r.p,.05)+rc(x.r.p,.10):'<td colspan="2">too few units</td>'}</tr>`).join('')}</table>
@@ -159,8 +185,9 @@ function pickLines(){const by={};for(const s of pick){const m=/^(\w+) (\d+):(\d+
 function wholeChapter(vs){if(!vs.length)return null;const [b,c]=vs[0];if(vs.some(x=>x[0]!==b||x[1]!==c))return null;const id=b+'.'+c;return CHU[id]&&vs.length===Stylo.S.chap[b][c].length?id:null}
 
 /* ---------- events ---------- */
-function tab(n){for(const k of ['home','unit','corp']){$('#p-'+k).hidden=k!==n}document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('on',b.dataset.t===n))}
-let editId=null,editC=null;
+function tab(n){for(const k of ['home','unit','corp','sec']){$('#p-'+k).hidden=k!==n}document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('on',b.dataset.t===n))}
+let editId=null,editC=null,editS=null;
+function endSEdit(){editS=null;$('#sh').innerHTML='Section builder <span class="m">(a set of units, each tested separately)</span>';$('#sk').hidden=true;$('#sb').textContent='Save section'}
 function endCEdit(){editC=null;$('#ch').innerHTML='Corpus builder <span class="m">(a group of units)</span>';$('#cx').hidden=true;$('#cb').textContent='Save corpus'}
 function endEdit(){editId=null;$('#uh').innerHTML='Unit builder <span class="m">(a text made of verse ranges)</span>';$('#uc').hidden=true;$('#us').textContent='Save unit'}
 async function onAct(a,t){const i=t.dataset.id;
@@ -169,14 +196,17 @@ async function onAct(a,t){const i=t.dataset.id;
   $('#uh').innerHTML='Editing unit <span class="m">(changes apply everywhere this unit is used)</span>';$('#uc').hidden=false;$('#us').textContent='Save changes';tab('unit');return}
  if(a==='ec'){const c=my.corpora[i];editC=i;$('#cn').value=c.name;selC.clear();c.units.forEach(x=>selC.add(x));$('#cm').textContent='';$('#ch').innerHTML='Editing corpus <span class="m">(changes are saved over the original)</span>';$('#cx').hidden=false;$('#cb').textContent='Save changes';drawTree($('#ct'),'pick',$('#cf').value);selCount();tab('corp');return}
  if(a==='ccancel'){endCEdit();selC.clear();$('#cn').value='';$('#cm').textContent='';drawTree($('#ct'),'pick',$('#cf').value);selCount();return}
+ if(a==='es'){const x=my.sections[i];editS=i;$('#sn').value=x.name;selS.clear();x.units.forEach(u=>selS.add(u));$('#sm').textContent='';$('#sh').innerHTML='Editing section <span class="m">(changes are saved over the original)</span>';$('#sk').hidden=false;$('#sb').textContent='Save changes';drawTree($('#sxt'),'picks',$('#sf').value);selSCount();tab('sec');return}
+ if(a==='scancel'){endSEdit();selS.clear();$('#sn').value='';$('#sm').textContent='';drawTree($('#sxt'),'picks',$('#sf').value);selSCount();return}
  if(a==='ucancel'){endEdit();$('#un').value='';$('#ur').value='';$('#uref').checked=false;$('#um').textContent='';return}
- if(a==='vc')viewCorpus(i);else if(a==='ic')runInternal(i);else if(a==='vu')viewUnit(i);else if(a==='tu')testUnit(i);
+ if(a==='vc')viewCorpus(i);else if(a==='ic')runInternal(i);else if(a==='vu')viewUnit(i);else if(a==='tu')testUnit(i);else if(a==='vs')viewSection(i);else if(a==='ts')testSection(i);
+ else if(a==='ds'){if(confirm('Delete the section "'+SEC[i].name+'"?')){delete my.sections[i];if(editS===i){endSEdit();selS.clear();$('#sn').value=''}save();render();$('#out').innerHTML=''}}
  else if(a==='hb'){$('#ix').innerHTML='';await hebrewInto($('#ix'),U[i].ranges)}
- else if(a==='du'){const users=Object.keys(my.corpora).filter(k=>my.corpora[k].units.includes(i));
-  if(users.length)return show(`<span class="bad">Cannot delete "${esc(U[i].name)}": it is part of ${users.map(k=>esc(my.corpora[k].name)).join(', ')}. Delete or change that corpus first.</span>`);
-  if(confirm('Delete the unit "'+U[i].name+'"?')){delete my.units[i];selC.delete(i);if(editId===i){endEdit();$('#un').value='';$('#ur').value=''}save();render()}}
+ else if(a==='du'){const users=Object.keys(my.corpora).filter(k=>my.corpora[k].units.includes(i)).map(k=>my.corpora[k].name).concat(Object.keys(my.sections).filter(k=>my.sections[k].units.includes(i)).map(k=>my.sections[k].name));
+  if(users.length)return show(`<span class="bad">Cannot delete "${esc(U[i].name)}": it is part of ${users.map(esc).join(', ')}. Remove it from those first.</span>`);
+  if(confirm('Delete the unit "'+U[i].name+'"?')){delete my.units[i];selC.delete(i);selS.delete(i);if(editId===i){endEdit();$('#un').value='';$('#ur').value=''}save();render()}}
  else if(a==='dc'){if(confirm('Delete the corpus "'+C[i].name+'"?')){delete my.corpora[i];if(editC===i){endCEdit();selC.clear();$('#cn').value=''}save();render();$('#out').innerHTML=''}}
- else if(a==='gall'||a==='gnone'){const d=t.closest('details');d._ids.forEach(x=>a==='gall'?selC.add(x):selC.delete(x));d.querySelectorAll('input[data-u]').forEach(x=>x.checked=a==='gall');updSel(d);selCount()}
+ else if(a==='gall'||a==='gnone'){const d=t.closest('details'),st=selOf(d._mode);d._ids.forEach(x=>a==='gall'?st.add(x):st.delete(x));d.querySelectorAll('input[data-u]').forEach(x=>x.checked=a==='gall');updSel(d);d._mode==='picks'?selSCount():selCount()}
  else if(a==='mode'){const p=t.dataset.m==='pick';$('#pw').hidden=!p;$('#m1').classList.toggle('on',!p);$('#m2').classList.toggle('on',p)}
  else if(a==='pall'||a==='pnone')setChapter(t.dataset.b,+t.dataset.c,a==='pall');
  else if(a==='pclr'){pick.clear();document.querySelectorAll('#pk input[data-v]').forEach(x=>x.checked=false);updPick()}
@@ -186,6 +216,7 @@ async function onAct(a,t){const i=t.dataset.id;
 document.addEventListener('click',e=>{const t=e.target.closest('[data-a]');if(!t)return;onAct(t.dataset.a,t).catch(err=>show('<span class="bad">'+esc(err.message)+'</span>'))});
 $('#uf').oninput=()=>drawTree($('#ut'),'browse',$('#uf').value);
 $('#cf').oninput=()=>drawTree($('#ct'),'pick',$('#cf').value);
+$('#sf').oninput=()=>drawTree($('#sxt'),'picks',$('#sf').value);
 $('#up').onclick=()=>{const r=parseRanges($('#ur').value),el=$('#upv');if(!r.length){el.innerHTML='<span class="bad">Add some verses or ranges first.</span>';return}
  try{Stylo.verses(r)}catch(e){el.innerHTML='<span class="bad">'+esc(e.message)+'</span>';return}hebrewInto(el,r)};
 $('#us').onclick=()=>{try{const n=$('#un').value.trim(),r=parseRanges($('#ur').value),ref=$('#uref').checked;if(!n)throw new Error('Give the unit a name.');
@@ -195,8 +226,10 @@ $('#us').onclick=()=>{try{const n=$('#un').value.trim(),r=parseRanges($('#ur').v
  const was=editId;my.units[was||'u'+Date.now()]={name:n,ranges:r,ref};endEdit();save();render();$('#um').textContent=was?'Changes saved.':'Saved to the Custom group.';$('#un').value='';$('#ur').value='';$('#upv').innerHTML=''}catch(e){$('#um').textContent=e.message}};
 $('#cb').onclick=()=>{try{const n=$('#cn').value.trim(),ids=[...selC];if(!n)throw new Error('Give the corpus a name.');if(!ids.length)throw new Error('Select some units first.');
  const er=Stylo.validate(ids,U);if(er.length)throw new Error(er.join(' '));const was=editC;my.corpora[was||'c'+Date.now()]={name:n,units:ids};endCEdit();save();selC.clear();$('#cn').value='';render();$('#cm').textContent=was?'Changes saved.':'Saved.'}catch(e){$('#cm').textContent=e.message}};
+$('#sb').onclick=()=>{try{const n=$('#sn').value.trim(),ids=Object.keys(U).filter(i=>selS.has(i));if(!n)throw new Error('Give the section a name.');if(ids.length<2)throw new Error('Select at least 2 units.');
+ const was=editS;my.sections[was||'s'+Date.now()]={name:n,units:ids};endSEdit();save();selS.clear();$('#sn').value='';render();$('#sm').textContent=was?'Changes saved.':'Saved.'}catch(e){$('#sm').textContent=e.message}};
 $('#ex').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(my,null,1)],{type:'application/json'}));a.download='my-stylometry-definitions.json';a.click()};
-$('#im').onchange=async e=>{try{const j=JSON.parse(await e.target.files[0].text());Object.assign(my.units,j.units||{});Object.assign(my.corpora,j.corpora||{});save();render()}catch(x){alert('Import failed: '+x.message)}};
+$('#im').onchange=async e=>{try{const j=JSON.parse(await e.target.files[0].text());Object.assign(my.units,j.units||{});Object.assign(my.corpora,j.corpora||{});Object.assign(my.sections,j.sections||{});save();render()}catch(x){alert('Import failed: '+x.message)}};
 (async()=>{try{const [ix,cp]=await Promise.all([fetch('data/index.json').then(r=>r.json()),fetch('data/corpora.json').then(r=>r.json())]);
  Stylo.init(ix);base=cp;CHU=Stylo.chapterUnits();load();render();drawPicker();$('#st').textContent='Ready.'}catch(e){$('#st').textContent='Failed to load data: '+e.message}})();
 </script></body></html>
