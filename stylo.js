@@ -44,6 +44,20 @@
   const overlap = (a, b) => { for (const x of a.vs) if (b.vs.has(x)) return true; return false; };
   // Test unit u against a corpus (list of unit ids). Testable corpus units that share verses with u are dropped;
   // reference-only units (e.g. auxiliary text) keep everything except the shared verses.
+  // Same calculation as dHC, but keeps the per-word details and the HC threshold set (the words the score rests on).
+  function hcWords(A, B) { const nA = sum(A), nB = sum(B), W = [];
+    for (let w = 0; w < A.length; w++) { const a = A[w], n = a + B[w]; if (n) { const q = (nA - a) / (nA + nB - n); W.push({ w, a, b: B[w], e: n * q, p: binP(a, n, q) }); } }
+    W.sort((x, y) => x.p - y.p); const N = W.length, km = Math.max(1, Math.floor(.35 * N)); let m = -1e9, k = 1;
+    for (let i = 1; i <= km; i++) { const f = i / N, z = Math.sqrt(N) * (f - W[i - 1].p) / Math.sqrt(f * (1 - f)); if (z > m) { m = z; k = i; } }
+    return { hc: m, N, k, nA, nB, words: W.slice(0, k) }; }
+  function refsFor(T, ids, units) { const tests = [], refs = [];
+    for (const id of ids) { const d = units[id]; let c = ucount(d);
+      if (overlap(T, c)) { if (!d.ref) continue; c = ucount(d, T.vs); if (!c.tokens) continue; }
+      (d.ref ? refs : tests).push(c.arr); }
+    return { tests, refs }; }
+  function explain(u, ids, units) { const T = ucount(u), { tests, refs } = refsFor(T, ids, units); if (tests.length < 3) return null;
+    const F = T.arr.length, C = new Float64Array(F); tests.concat(refs).forEach(a => { for (let i = 0; i < F; i++) C[i] += a[i]; });
+    return { r: attrP(T.arr, tests, refs), ...hcWords(T.arr, C), nUnits: tests.length, nRefs: refs.length }; }
   function testVs(u, ids, units) { const T = ucount(u), tests = [], refs = [];
     for (const id of ids) { const d = units[id]; let c = ucount(d);
       if (overlap(T, c)) { if (!d.ref) continue; c = ucount(d, T.vs); if (!c.tokens) continue; }
@@ -61,6 +75,6 @@
     ['1Sam', '1 Samuel'], ['2Sam', '2 Samuel'], ['1Kgs', '1 Kings'], ['2Kgs', '2 Kings']];
   // one auto-generated unit per complete chapter, id "Book.chapter" (e.g. "Deut.6")
   function chapterUnits() { const out = {}; for (const [k, n] of BOOKS) for (const c of chapters(k)) out[k + '.' + c] = { name: n + ' ' + c, ranges: [k + ' ' + c], ref: false, auto: true, book: k, ch: c }; return out; }
-  const api = { init, verses, ucount, quickTokens, chapters, chapterUnits, BOOKS, testVs, internal, validate, sum, tsf, LIM, S };
+  const api = { init, verses, ucount, quickTokens, chapters, chapterUnits, BOOKS, testVs, internal, validate, sum, tsf, explain, LIM, S };
   if (typeof module !== 'undefined') module.exports = api; else g.Stylo = api;
 })(this);
