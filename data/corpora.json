@@ -70,7 +70,8 @@
     "Deut.19",
     "Deut.26",
     "Deut.28"
-   ]
+   ],
+   "short": "D*"
   },
   "DtrH": {
    "name": "DtrH — Deuteronomistic History (GTC from the paper)",
@@ -94,7 +95,8 @@
     "2Kgs.23",
     "2Kgs.24",
     "2Kgs.25"
-   ]
+   ],
+   "short": "DtrH*"
   },
   "P": {
    "name": "P — Priestly (GTC from the paper)",
@@ -122,46 +124,8 @@
     "Lev.8",
     "Lev.9",
     "P-aux"
-   ]
-  },
-  "Deut": {
-   "name": "Deuteronomy (entire book)",
-   "units": [
-    "Deut.1",
-    "Deut.2",
-    "Deut.3",
-    "Deut.4",
-    "Deut.5",
-    "Deut.6",
-    "Deut.7",
-    "Deut.8",
-    "Deut.9",
-    "Deut.10",
-    "Deut.11",
-    "Deut.12",
-    "Deut.13",
-    "Deut.14",
-    "Deut.15",
-    "Deut.16",
-    "Deut.17",
-    "Deut.18",
-    "Deut.19",
-    "Deut.20",
-    "Deut.21",
-    "Deut.22",
-    "Deut.23",
-    "Deut.24",
-    "Deut.25",
-    "Deut.26",
-    "Deut.27",
-    "Deut.28",
-    "Deut.29",
-    "Deut.30",
-    "Deut.31",
-    "Deut.32",
-    "Deut.33",
-    "Deut.34"
-   ]
+   ],
+   "short": "P*"
   },
   "DLaw": {
    "name": "Deuteronomic Law Code (Deut 12–26)",
@@ -181,7 +145,8 @@
     "Deut.24",
     "Deut.25",
     "Deut.26"
-   ]
+   ],
+   "short": "Dtr Law Code"
   },
   "Lev": {
    "name": "Leviticus (entire book)",
@@ -213,7 +178,8 @@
     "Lev.25",
     "Lev.26",
     "Lev.27"
-   ]
+   ],
+   "short": "Leviticus"
   },
   "ExNar": {
    "name": "Exodus narrative (Exod 1–14)",
@@ -232,7 +198,8 @@
     "Exod.12",
     "Exod.13",
     "Exod.14"
-   ]
+   ],
+   "short": "Exodus narrative"
   }
  }
 }
