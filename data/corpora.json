@@ -127,6 +127,23 @@
    ],
    "short": "P*"
   },
+  "DIntro": {
+   "name": "Deuteronomy intro (Deut 1–11)",
+   "short": "Dtr Intro",
+   "units": [
+    "Deut.1",
+    "Deut.2",
+    "Deut.3",
+    "Deut.4",
+    "Deut.5",
+    "Deut.6",
+    "Deut.7",
+    "Deut.8",
+    "Deut.9",
+    "Deut.10",
+    "Deut.11"
+   ]
+  },
   "DLaw": {
    "name": "Deuteronomic Law Code (Deut 12–26)",
    "units": [
@@ -146,7 +163,7 @@
     "Deut.25",
     "Deut.26"
    ],
-   "short": "Dtr Law Code"
+   "short": "Dtr Law"
   },
   "Lev": {
    "name": "Leviticus (entire book)",
@@ -182,14 +199,13 @@
    "short": "Leviticus"
   },
   "ExNar": {
-   "name": "Exodus narrative (Exod 1–14)",
+   "name": "Exodus story (Exod 1–14 without ch. 6)",
    "units": [
     "Exod.1",
     "Exod.2",
     "Exod.3",
     "Exod.4",
     "Exod.5",
-    "Exod.6",
     "Exod.7",
     "Exod.8",
     "Exod.9",
@@ -199,7 +215,7 @@
     "Exod.13",
     "Exod.14"
    ],
-   "short": "Exodus narrative"
+   "short": "Exodus story"
   }
  }
 }
