@@ -2,8 +2,8 @@
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Hebrew Stylometry (Higher Criticism)</title>
 <style>
-:root{color-scheme:light dark;--bg:#fff;--fg:#1a1a1a;--mut:#666;--bd:#ccc;--ac:#1f5fbf;--ok:#1a7f37;--bad:#b3261e;--card:#f6f6f6;--on:#dce8fb;--wn:#a15c00}
-@media(prefers-color-scheme:dark){:root{--bg:#161616;--fg:#e8e8e8;--mut:#9a9a9a;--bd:#444;--ac:#6ea8ff;--ok:#56d364;--bad:#ff7b72;--card:#202020;--on:#25344d;--wn:#e3a008}}
+:root{color-scheme:light dark;--bg:#fff;--fg:#1a1a1a;--mut:#666;--bd:#ccc;--ac:#1f5fbf;--ok:#1a7f37;--bad:#b3261e;--card:#f6f6f6;--on:#dce8fb;--wn:#a15c00;--s1:#257de0;--s2:#f47230;--s3:#00b894}
+@media(prefers-color-scheme:dark){:root{--bg:#161616;--fg:#e8e8e8;--mut:#9a9a9a;--bd:#444;--ac:#6ea8ff;--ok:#56d364;--bad:#ff7b72;--card:#202020;--on:#25344d;--wn:#e3a008;--s1:#338ced;--s2:#e76624;--s3:#00a888}}
 body{margin:0 auto;padding:12px;max-width:1040px;background:var(--bg);color:var(--fg);font:14px/1.45 system-ui,sans-serif}
 h1{font-size:20px;margin:0 0 4px}h2{font-size:15px;margin:0 0 6px}.m{color:var(--mut);font-size:12px}a{color:var(--ac)}
 .g{display:flex;gap:12px;flex-wrap:wrap}.g>*{flex:1 1 0;min-width:340px;box-sizing:border-box}.g .col>section:first-child{margin-top:0}#ut.tall{max-height:78vh}
@@ -27,6 +27,7 @@ input[type=checkbox],input[type=file]{width:auto}
 .hb{max-height:380px;overflow:auto;border:1px solid var(--bd);border-radius:4px;padding:6px 8px;background:var(--bg)}
 .hv{display:flex;gap:10px;align-items:baseline;padding:2px 0;border-bottom:1px solid var(--bd)}.vr{flex:0 0 74px;color:var(--mut);font-size:11px}
 .heb{flex:1;direction:rtl;text-align:right;font-size:20px;line-height:1.7;font-family:"SBL Hebrew","Ezra SIL","Times New Roman",serif}.qv{color:var(--mut);font-size:17px}
+.pw{position:relative}.tip{position:absolute;pointer-events:none;background:var(--bg);border:1px solid var(--bd);border-radius:4px;padding:4px 8px;font-size:12px;box-shadow:0 2px 6px rgba(0,0,0,.25);white-space:nowrap;z-index:5}.tip b{font-size:13px}.lgk{display:flex;gap:14px;flex-wrap:wrap;margin:4px 0;font-size:12px}.lgk svg{vertical-align:-3px;margin-right:4px}
 </style></head><body>
 <h1>Hebrew Stylometry (Higher Criticism)</h1>
 <div class="m">Reproduces the method of Faigenbaum-Golovin et al. (PLOS ONE 2025) on the Open Scriptures Hebrew Bible (CC BY). The three built-in corpora are a reproduction, not an exact replica of the paper's numbers. <span id="st">Loading…</span> &middot; <a href="validation.html">How closely does this match the paper? &rarr;</a></div>
@@ -139,7 +140,7 @@ const show=h=>{$('#out').innerHTML=h;$('#out').scrollIntoView({block:'nearest',b
 /* ---------- views ---------- */
 function viewCorpus(id){const c=C[id],ids=c.units,F=new Set();let tk=0;
  ids.forEach(i=>{const u=Stylo.ucount(U[i]);tk+=u.tokens;u.arr.forEach((x,j)=>{if(x>0)F.add(j)})});const e=Stylo.validate(ids,U);
- show(`<h2>${esc(c.name)}</h2><p>${ids.length} units (${ids.filter(i=>!U[i].ref).length} testable) · ${fx(tk)} tokens · ${fx(F.size)} distinct features</p>${e.length?`<p class="bad">${e.map(esc).join('<br>')}</p>`:''}<p class="m">${ids.map(i=>esc(U[i].name)).join(', ')}</p><button data-a="ic" data-id="${esc(id)}">Run internal consistency</button> <button data-a="xc" data-id="${esc(id)}">Compare to other corpora</button><div id="ix"></div>`)}
+ show(`<h2>${esc(c.name)}</h2><p>${ids.length} units (${ids.filter(i=>!U[i].ref).length} testable) · ${fx(tk)} tokens · ${fx(F.size)} distinct features</p>${e.length?`<p class="bad">${e.map(esc).join('<br>')}</p>`:''}<p class="m">${ids.map(i=>esc(U[i].name)).join(', ')}</p><button data-a="ic" data-id="${esc(id)}">Run internal consistency</button> <button data-a="xc" data-id="${esc(id)}">Compare to other corpora</button> <button data-a="hc" data-id="${esc(id)}">HC discrepancy</button><div id="ix"></div>`)}
 function runInternal(id){$('#ix').textContent='Running…';setTimeout(()=>{try{const res=Stylo.internal(C[id].units,U);let rej=0;
  const rows=res.map(x=>{const p=x.r?x.r.p:null;if(p!==null&&p<=.05)rej++;return `<tr><td>${esc(U[x.id].name)}</td><td>${fx(Stylo.ucount(U[x.id]).tokens)}</td><td>${p===null?'n/a':fp(p)}</td>${rc(p,.05)}${rc(p,.10)}</tr>`}).join('');
  $('#ix').innerHTML=`<p>Each testable unit against the rest of its own corpus (leave-one-out). Rejections: <b>${rej}</b> of ${res.length} (about 5% expected for a homogeneous corpus).</p><table><tr><th>Unit</th><th>Tokens</th><th>p</th><th>Result at 0.05</th><th>Result at 0.10</th></tr>${rows}</table>`}catch(e){$('#ix').innerHTML='<span class="bad">'+esc(e.message)+'</span>'}},30)}
@@ -152,6 +153,54 @@ function compareCorpus(id){$('#ix').textContent='Running…';setTimeout(()=>{try
  $('#ix').innerHTML=`<div class="t"><table><tr><th>Unit</th><th>Tokens</th>${ks.map((k,c)=>`<th title="${esc(C[k].name)}">${esc(sh(k))}${c?'':' (internal)'}</th>`).join('')}</tr>${ids.map((i,r)=>`<tr><td>${esc(U[i].name)}</td><td>${fx(tok(i))}</td>${R[r].map((p,c)=>`<td class="${cls(p)}${top[r]===c?' top':''}">${p===null?'n/a':fp(p)}</td>`).join('')}</tr>`).join('')}
  ${sm('Rejected at 0.05',c=>col(c).filter(p=>p<=.05).length+'/'+col(c).length)}${sm('Highest in row',c=>top.filter(t=>t===c).length+' unit'+(top.filter(t=>t===c).length===1?'':'s'))}</table></div>${LEGEND}
  <p class="m">Every unit of this corpus tested against each corpus; the first column is the leave-one-out internal test. Reds and orange are rejections (p ≤ 0.10); green shading above 0.30 only helps compare corpora with each other, since a larger p is not stronger evidence of a match. Green box: the highest p in the row. Corpus units that share verses with the tested unit are left out for that test, and "n/a" means too few units remained. A unit that belongs to several corpora (for example the Deuteronomy chapters) will legitimately score well in more than one column.</p>`}catch(e){$('#ix').innerHTML='<span class="bad">'+esc(e.message)+'</span>'}},30)}
+let HCR=null;
+const hcAb=n=>{const b=Stylo.BOOKS.find(x=>n.startsWith(x[1]+' '));return b?b[0]+n.slice(b[1].length):n};
+function hcRefs(){if(HCR)return HCR;const pts=[];
+ for(const [k,g] of [['DD','d'],['P','p']])for(const i of C[k].units){if(U[i].ref)continue;const a=Stylo.testVs(U[i],C.DD.units,U),c=Stylo.testVs(U[i],C.P.units,U);if(a&&c)pts.push({g,n:U[i].name,x:a.x,y:c.x,pa:a.p,pp:c.p})}
+ return HCR=pts}
+function hcPlot(cur,name){const refs=hcRefs(),all=refs.concat(cur),W=640,H=440,M={l:50,r:14,t:12,b:42};
+ const top=v=>Math.max(2,Math.ceil(Math.max(...v)+.2)),xm=top(all.map(p=>p.x)),ym=top(all.map(p=>p.y)),sx=v=>M.l+v/xm*(W-M.l-M.r),sy=v=>H-M.b-v/ym*(H-M.t-M.b);
+ const step=m=>m>12?2:1,gx=[],gy=[];for(let v=0;v<=xm;v+=step(xm))gx.push(v);for(let v=0;v<=ym;v+=step(ym))gy.push(v);
+ const grid=gx.map(v=>`<line x1="${sx(v)}" x2="${sx(v)}" y1="${M.t}" y2="${H-M.b}" stroke="var(--bd)" stroke-width="1" opacity=".5"/><text x="${sx(v)}" y="${H-M.b+14}" text-anchor="middle" font-size="10" fill="var(--mut)">${v}</text>`).join('')+gy.map(v=>`<line y1="${sy(v)}" y2="${sy(v)}" x1="${M.l}" x2="${W-M.r}" stroke="var(--bd)" stroke-width="1" opacity=".5"/><text x="${M.l-6}" y="${sy(v)+3}" text-anchor="end" font-size="10" fill="var(--mut)">${v}</text>`).join('');
+ const dm=Math.min(xm,ym),diag=`<line x1="${sx(0)}" y1="${sy(0)}" x2="${sx(dm)}" y2="${sy(dm)}" stroke="var(--mut)" stroke-width="1" stroke-dasharray="4 4"/>`;
+ const sq=(x,y,r,f,o)=>`<rect x="${x-r}" y="${y-r}" width="${2*r}" height="${2*r}" fill="${f}" fill-opacity="${o}" stroke="${f}" stroke-width="1"/>`;
+ const rp=refs.map(p=>p.g==='d'?`<circle cx="${sx(p.x)}" cy="${sy(p.y)}" r="3.5" fill="var(--s1)" fill-opacity=".35" stroke="var(--s1)" stroke-width="1"/>`:sq(sx(p.x),sy(p.y),3.2,'var(--s2)',.35)).join('');
+ const dia=(x,y,r)=>`<path d="M${x} ${y-r}L${x+r} ${y}L${x} ${y+r}L${x-r} ${y}Z" fill="var(--s3)" stroke="var(--bg)" stroke-width="2"/>`;
+ const cp=cur.map(p=>dia(sx(p.x),sy(p.y),7)).join(''),placed=[],lab=[];
+ if(cur.length<=30)cur.forEach(p=>{const t=hcAb(p.n),w=t.length*5.6,x=sx(p.x),y=sy(p.y);
+  for(const [dx,dy,an] of [[9,-7,'start'],[9,13,'start'],[-9,-7,'end'],[-9,13,'end']]){const x0=an==='start'?x+dx:x+dx-w,b={x0,x1:x0+w,y0:y+dy-9,y1:y+dy+2};
+   if(!placed.some(q=>b.x0<q.x1&&b.x1>q.x0&&b.y0<q.y1&&b.y1>q.y0)||an==='end'&&dy===13){placed.push(b);lab.push(`<text x="${x+dx}" y="${y+dy}" text-anchor="${an}" font-size="10" fill="var(--fg)">${esc(t)}</text>`);return}}});
+ const svg=`<svg id="hcs" viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Scatter of HC discrepancy to D** against HC discrepancy to P*; the table above lists every value">${grid}<line x1="${M.l}" x2="${M.l}" y1="${M.t}" y2="${H-M.b}" stroke="var(--mut)"/><line x1="${M.l}" x2="${W-M.r}" y1="${H-M.b}" y2="${H-M.b}" stroke="var(--mut)"/>${diag}${rp}${cp}${lab.join('')}<text x="${(M.l+W-M.r)/2}" y="${H-6}" text-anchor="middle" font-size="12" fill="var(--fg)">HC discrepancy to D** (lower = closer to D**)</text><text transform="translate(13 ${(M.t+H-M.b)/2}) rotate(-90)" text-anchor="middle" font-size="12" fill="var(--fg)">HC discrepancy to P* (lower = closer to P*)</text></svg>`;
+ const key=`<div class="lgk"><span><svg width="14" height="14"><circle cx="7" cy="7" r="4" fill="var(--s1)" fill-opacity=".35" stroke="var(--s1)"/></svg>D** units</span><span><svg width="14" height="14"><rect x="3" y="3" width="8" height="8" fill="var(--s2)" fill-opacity=".35" stroke="var(--s2)"/></svg>P* units</span><span><svg width="16" height="16"><path d="M8 1L15 8L8 15L1 8Z" fill="var(--s3)" stroke="var(--bg)" stroke-width="1.5"/></svg>${esc(name)}</span><span><svg width="18" height="14"><line x1="1" y1="12" x2="17" y2="2" stroke="var(--mut)" stroke-dasharray="3 3"/></svg>equal distance to both</span></div>`;
+ return key+'<div class="pw">'+svg+'<div class="tip" id="hct" hidden></div></div>'}
+function hcTip(cur){const s=$('#hcs');if(!s)return;const refs=hcRefs(),all=refs.map(p=>({...p,k:p.g==='d'?'D** unit':'P* unit'})).concat(cur.map(p=>({...p,k:'This corpus'}))),t=$('#hct'),vb=s.viewBox.baseVal;
+ const xm=Math.max(2,Math.ceil(Math.max(...all.map(p=>p.x))+.2)),ym=Math.max(2,Math.ceil(Math.max(...all.map(p=>p.y))+.2));
+ const px=p=>50+p.x/xm*(vb.width-64),py=p=>vb.height-42-p.y/ym*(vb.height-54);
+ const mv=e=>{const r=s.getBoundingClientRect(),k=r.width/vb.width,mx=(e.clientX-r.left)/k,my=(e.clientY-r.top)/k;let b=null,bd=1e9;
+  for(const p of all){const d=Math.hypot(px(p)-mx,py(p)-my)-(p.k==='This corpus'?4:0);if(d<bd){bd=d;b=p}}
+  if(!b||bd>20){t.hidden=true;return}
+  t.textContent='';const h=document.createElement('b');h.textContent=b.n;t.append(h,document.createElement('br'));
+  const add=s=>{t.append(document.createTextNode(s),document.createElement('br'))};add(b.k);add('HC to D**: '+b.x.toFixed(2)+' (p '+fp(b.pa)+')');add('HC to P*: '+b.y.toFixed(2)+' (p '+fp(b.pp)+')');
+  t.lastChild.remove();t.hidden=false;const tw=t.offsetWidth,l=px(b)*k+12;t.style.left=(l+tw>r.width?px(b)*k-tw-12:l)+'px';t.style.top=Math.max(0,py(b)*k-30)+'px'};
+ s.onpointermove=mv;s.onpointerleave=()=>{t.hidden=true}}
+function hcDisc(id){$('#ix').textContent='Running…';setTimeout(()=>{try{
+ if(!C.DD||!C.P)throw new Error('The D** and P* corpora are needed for this test.');
+ const ids=C[id].units.filter(i=>!U[i].ref),isD=id==='DD',isP=id==='P';
+ const R=ids.map(i=>{const o=Stylo.testVs(U[i],C[id].units,U),a=isD?o:Stylo.testVs(U[i],C.DD.units,U),c=isP?o:Stylo.testVs(U[i],C.P.units,U);
+  const win=!!(o&&(isD||a)&&(isP||c)&&(isD||o.p>a.p)&&(isP||o.p>c.p));return{i,o,a,c,win}});
+ const ok=R.filter(r=>r.o&&r.a&&r.c),n=ok.length,cnt=(f,t)=>ok.filter(r=>r[f].p<=t).length,mean=f=>n?ok.reduce((s,r)=>s+r[f].x,0)/n:null;
+ const cell=r=>r?`<td class="${pb(r.p)}">${fp(r.p)}</td>`:'<td>n/a</td>',hv=r=>r?`<td>${r.x.toFixed(2)}</td>`:'<td>n/a</td>';
+ const rows=R.map(r=>`<tr><td>${esc(U[r.i].name)}</td><td>${fx(tok(r.i))}</td>${cell(r.o)}${cell(r.a)}${cell(r.c)}<td class="${r.win?'ok':'m'}">${r.win?'win':'—'}</td>${hv(r.a)}${hv(r.c)}</tr>`).join('');
+ const sm=(l,a,b,c,d,e)=>`<tr class="sm"><td colspan="2"><b>${l}</b></td><td>${a}</td><td>${b}</td><td>${c}</td><td>${d}</td><td>${e[0]}</td><td>${e[1]}</td></tr>`;
+ const wins=R.filter(r=>r.win).length,sh=C[id].short||'';
+ const cur=ok.map(r=>({n:U[r.i].name,x:r.a.x,y:r.c.x,pa:r.a.p,pp:r.c.p}));
+ $('#ix').innerHTML=`<p>Each testable unit against its own corpus (leave-one-out) and against the two reference corpora, D** and P*. <b>Win</b>: the unit's internal p is higher than its p against ${isD?'P*':isP?'D**':'both D** and P*'}. <b>HC discrepancy</b> is the raw score behind each p (lower = more similar).</p>
+ <p><b>${wins}</b> of ${R.length} units win · rejected by D**: <b>${cnt('a',.05)}</b>/${n} at 0.05, <b>${cnt('a',.10)}</b>/${n} at 0.10 · rejected by P*: <b>${cnt('c',.05)}</b>/${n} at 0.05, <b>${cnt('c',.10)}</b>/${n} at 0.10</p>
+ <div class="t"><table><tr><th>Unit</th><th>Tokens</th><th>p internal</th><th>p vs D**${isD?' (internal)':''}</th><th>p vs P*${isP?' (internal)':''}</th><th>Win</th><th>HC to D**</th><th>HC to P*</th></tr>${rows}
+ ${sm('Rejected at 0.05','',cnt('a',.05)+'/'+n,cnt('c',.05)+'/'+n,'',['',''])}${sm('Rejected at 0.10','',cnt('a',.10)+'/'+n,cnt('c',.10)+'/'+n,'',['',''])}${sm('Mean HC','','','','',[mean('a')===null?'':mean('a').toFixed(2),mean('c')===null?'':mean('c').toFixed(2)])}</table></div>${LEGEND}
+ <h3 style="font-size:14px;margin:10px 0 2px">HC discrepancy plot</h3><div id="hcp">Plotting…</div>
+ <p class="m">D** is D* and DtrH* combined without Deut 28, Josh 6, 1 Kgs 8 and Judg 6 (a judgement that those chapters are not clean examples of the source); P* is the paper's priestly corpus. Each reference unit is plotted leave-one-out against its own corpus. Raw HC grows with text length (roughly +0.17 per 100 tokens in the paper's corpora), so longer units sit further from the origin on both axes. A unit that overlaps D** or P* is tested with its own verses removed from that corpus. Winning and not being rejected does not show a text is free of other sources; P* in particular rarely rejects non-priestly text.</p>`;
+ setTimeout(()=>{try{$('#hcp').innerHTML=hcPlot(cur,C[id].short||C[id].name.split(/ [—(]/)[0]);hcTip(cur)}catch(e){$('#hcp').innerHTML='<span class="bad">'+esc(e.message)+'</span>'}},20)}catch(e){$('#ix').innerHTML='<span class="bad">'+esc(e.message)+'</span>'}},30)}
 function viewUnit(id){const u=U[id],c=Stylo.ucount(u),w=[];if(c.tokens<250)w.push('Under 250 tokens: results may be unreliable.');if(c.tokens>1200)w.push('Long text ('+fx(c.tokens)+' tokens, about '+Math.round(c.tokens/600)+'× a typical chapter): the test is calibrated on chapter-sized texts, so p-values tend to come out too low. Consider cutting it into chapter-sized units and testing them as a section.');if(c.vs.size<10)w.push('Under 10 verses: the paper reports poor accuracy for very short texts.');
  show(`<h2>${esc(u.name)}</h2><p class="m">${esc(u.ranges.join('; '))}</p><p>${c.vs.size} verses · ${fx(c.tokens)} tokens · ${fx(c.distinct)} distinct features</p>${w.length?`<p class="bad">${w.join('<br>')}</p>`:''}${u.ref?'<p class="m">Reference-only unit: it adds to corpus counts but is never tested.</p>':`<button data-a="tu" data-id="${esc(id)}">Test vs corpora</button> `}<button data-a="hb" data-id="${esc(id)}">Show Hebrew</button>${my.units[id]?` <button data-a="eu" data-id="${esc(id)}">Edit custom unit</button>`:''}<div id="ix"></div>`)}
 function viewSection(id){const s=SEC[id],ids=s.units.filter(i=>U[i]);let tk=0;const small=[];ids.forEach(i=>{const n=tok(i);tk+=n;if(n<250)small.push(U[i].name)});
@@ -219,7 +268,7 @@ async function onAct(a,t){const i=t.dataset.id;
  if(a==='es'){const x=my.sections[i];editS=i;$('#sn').value=x.name;selS.clear();x.units.forEach(u=>selS.add(u));$('#sm').textContent='';$('#sh').innerHTML='Editing section <span class="m">(changes are saved over the original)</span>';$('#sk').hidden=false;$('#sb').textContent='Save changes';drawTree($('#sxt'),'picks',$('#sf').value);selSCount();tab('sec');return}
  if(a==='scancel'){endSEdit();selS.clear();$('#sn').value='';$('#sm').textContent='';drawTree($('#sxt'),'picks',$('#sf').value);selSCount();return}
  if(a==='ucancel'){endEdit();$('#un').value='';$('#ur').value='';$('#uref').checked=false;$('#um').textContent='';return}
- if(a==='vc')viewCorpus(i);else if(a==='ic')runInternal(i);else if(a==='xc')compareCorpus(i);else if(a==='vu')viewUnit(i);else if(a==='tu')testUnit(i);else if(a==='vs')viewSection(i);else if(a==='ts')testSection(i);
+ if(a==='vc')viewCorpus(i);else if(a==='ic')runInternal(i);else if(a==='xc')compareCorpus(i);else if(a==='hc')hcDisc(i);else if(a==='vu')viewUnit(i);else if(a==='tu')testUnit(i);else if(a==='vs')viewSection(i);else if(a==='ts')testSection(i);
  else if(a==='ds'){if(confirm('Delete the section "'+SEC[i].name+'"?')){delete my.sections[i];if(editS===i){endSEdit();selS.clear();$('#sn').value=''}save();render();$('#out').innerHTML=''}}
  else if(a==='hb'){$('#ix').innerHTML='';await hebrewInto($('#ix'),U[i].ranges)}
  else if(a==='du'){const users=Object.keys(my.corpora).filter(k=>my.corpora[k].units.includes(i)).map(k=>my.corpora[k].name).concat(Object.keys(my.sections).filter(k=>my.sections[k].units.includes(i)).map(k=>my.sections[k].name));

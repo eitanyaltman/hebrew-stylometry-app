@@ -127,6 +127,36 @@
    ],
    "short": "P*"
   },
+  "DD": {
+   "name": "D** — Deuteronomic + Deuteronomistic combined (D* and DtrH* without Deut 28, Josh 6, 1 Kgs 8, Judg 6)",
+   "short": "D**",
+   "units": [
+    "Deut.6",
+    "Deut.12",
+    "Deut.13",
+    "Deut.15",
+    "Deut.16",
+    "Deut.18",
+    "Deut.19",
+    "Deut.26",
+    "Deut.8",
+    "Deut.9",
+    "Deut.10",
+    "Deut.11",
+    "Deut.27",
+    "Josh.1",
+    "Josh.5",
+    "Josh.12",
+    "Josh.23",
+    "Judg.2",
+    "2Sam.7",
+    "2Kgs.17.1-21",
+    "2Kgs.22",
+    "2Kgs.23",
+    "2Kgs.24",
+    "2Kgs.25"
+   ]
+  },
   "DIntro": {
    "name": "Deuteronomy intro (Deut 1–11)",
    "short": "Dtr Intro",
