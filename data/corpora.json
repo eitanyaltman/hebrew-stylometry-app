@@ -55,6 +55,204 @@
     "Lev 12"
    ],
    "ref": true
+  },
+  "GenJ.01": {
+   "name": "Gen J 01 (Gen 2:6–4:13)",
+   "ranges": [
+    "Gen 2:6,10-14,17,20,23-25",
+    "Gen 3:2-7,10-12,15-20,24",
+    "Gen 4:1-13"
+   ],
+   "ref": false
+  },
+  "GenJ.02": {
+   "name": "Gen J 02 (Gen 4:14–7:23)",
+   "ranges": [
+    "Gen 4:14-26",
+    "Gen 5:29",
+    "Gen 6:1-6,8",
+    "Gen 7:1-5,10,12,23"
+   ],
+   "ref": false
+  },
+  "GenJ.03": {
+   "name": "Gen J 03 (Gen 8:8–11:30)",
+   "ranges": [
+    "Gen 8:8-12,20-22",
+    "Gen 9:20-21,23-27",
+    "Gen 10:8-19,21,25-30",
+    "Gen 11:1-9,29-30"
+   ],
+   "ref": false
+  },
+  "GenJ.04": {
+   "name": "Gen J 04 (Gen 12:1–13:18)",
+   "ranges": [
+    "Gen 12:1-3,6-20",
+    "Gen 13:1-5,7-10,13-18"
+   ],
+   "ref": false
+  },
+  "GenJ.05": {
+   "name": "Gen J 05 (Gen 14:1–16:14)",
+   "ranges": [
+    "Gen 14:1-17,21,23-24",
+    "Gen 16:2,4-8,10-14"
+   ],
+   "ref": false
+  },
+  "GenJ.06": {
+   "name": "Gen J 06 (Gen 18:1–18:33)",
+   "ranges": [
+    "Gen 18:1-33"
+   ],
+   "ref": false
+  },
+  "GenJ.07": {
+   "name": "Gen J 07 (Gen 19:1–19:34)",
+   "ranges": [
+    "Gen 19:1-28,30-34"
+   ],
+   "ref": false
+  },
+  "GenJ.08": {
+   "name": "Gen J 08 (Gen 19:35–24:21)",
+   "ranges": [
+    "Gen 19:35-38",
+    "Gen 21:1,7,22-24,27,31-33",
+    "Gen 22:20-24",
+    "Gen 24:1-21"
+   ],
+   "ref": false
+  },
+  "GenJ.09": {
+   "name": "Gen J 09 (Gen 24:22–24:58)",
+   "ranges": [
+    "Gen 24:22-58"
+   ],
+   "ref": false
+  },
+  "GenJ.10": {
+   "name": "Gen J 10 (Gen 24:59–26:21)",
+   "ranges": [
+    "Gen 24:59-66",
+    "Gen 25:1-6,21-25,27-34",
+    "Gen 26:1-12,16-17,19-21"
+   ],
+   "ref": false
+  },
+  "GenJ.11": {
+   "name": "Gen J 11 (Gen 26:22–27:28)",
+   "ranges": [
+    "Gen 26:22-33",
+    "Gen 27:1-28"
+   ],
+   "ref": false
+  },
+  "GenJ.12": {
+   "name": "Gen J 12 (Gen 27:29–29:12)",
+   "ranges": [
+    "Gen 27:29-45",
+    "Gen 28:10,13-15",
+    "Gen 29:1-12"
+   ],
+   "ref": false
+  },
+  "GenJ.13": {
+   "name": "Gen J 13 (Gen 29:13–30:31)",
+   "ranges": [
+    "Gen 29:13-23,25-28,30-35",
+    "Gen 30:1-2,5-16,25-31"
+   ],
+   "ref": false
+  },
+  "GenJ.14": {
+   "name": "Gen J 14 (Gen 30:32–32:26)",
+   "ranges": [
+    "Gen 30:32-42",
+    "Gen 31:3",
+    "Gen 32:3-26"
+   ],
+   "ref": false
+  },
+  "GenJ.15": {
+   "name": "Gen J 15 (Gen 32:32–35:21)",
+   "ranges": [
+    "Gen 32:32",
+    "Gen 33:1-17",
+    "Gen 34:1,5,7,26,30-31",
+    "Gen 35:1-5,7-8,21"
+   ],
+   "ref": false
+  },
+  "GenJ.16": {
+   "name": "Gen J 16 (Gen 37:3–38:19)",
+   "ranges": [
+    "Gen 37:3-10,19-20,23,26-27,31-35",
+    "Gen 38:1-19"
+   ],
+   "ref": false
+  },
+  "GenJ.17": {
+   "name": "Gen J 17 (Gen 38:20–39:23)",
+   "ranges": [
+    "Gen 38:20-30",
+    "Gen 39:2-23"
+   ],
+   "ref": false
+  },
+  "GenJ.18": {
+   "name": "Gen J 18 (Gen 41:41–42:36)",
+   "ranges": [
+    "Gen 41:41-43",
+    "Gen 42:1-36"
+   ],
+   "ref": false
+  },
+  "GenJ.19": {
+   "name": "Gen J 19 (Gen 42:37–43:33)",
+   "ranges": [
+    "Gen 42:37-38",
+    "Gen 43:1-33"
+   ],
+   "ref": false
+  },
+  "GenJ.20": {
+   "name": "Gen J 20 (Gen 43:34–44:34)",
+   "ranges": [
+    "Gen 43:34",
+    "Gen 44:1-34"
+   ],
+   "ref": false
+  },
+  "GenJ.21": {
+   "name": "Gen J 21 (Gen 45:1–45:28)",
+   "ranges": [
+    "Gen 45:1-28"
+   ],
+   "ref": false
+  },
+  "GenJ.22": {
+   "name": "Gen J 22 (Gen 46:28–47:31)",
+   "ranges": [
+    "Gen 46:28-34",
+    "Gen 47:1-4,12-26,29-31"
+   ],
+   "ref": false
+  },
+  "GenJ.23": {
+   "name": "Gen J 23 (Gen 49:1–49:28)",
+   "ranges": [
+    "Gen 49:1-28"
+   ],
+   "ref": false
+  },
+  "GenJ.24": {
+   "name": "Gen J 24 (Gen 50:1–50:22)",
+   "ranges": [
+    "Gen 50:1-11,14-22"
+   ],
+   "ref": false
   }
  },
  "corpora": {
@@ -213,6 +411,37 @@
     "Exod.14",
     "Exod.17",
     "Exod.18"
+   ]
+  },
+  "GenJ": {
+   "name": "Genesis (J source - Baden)",
+   "short": "Gen-J(B)",
+   "notes": "Genesis J passages following Joel Baden's source divisions, as marked in navy blue on the Genesis page of the Wikiversity Documentary Hypothesis resource (Bible/King James/Documentary Hypothesis/Genesis), with the footnotes to Baden's explanations. Only verses coloured entirely as J are included; verses shared with P, E or R are left out, so chapters are only partly covered. Chapters 15, 17, 20 and 23 have no wholly J verses and are absent.",
+   "units": [
+    "GenJ.01",
+    "GenJ.02",
+    "GenJ.03",
+    "GenJ.04",
+    "GenJ.05",
+    "GenJ.06",
+    "GenJ.07",
+    "GenJ.08",
+    "GenJ.09",
+    "GenJ.10",
+    "GenJ.11",
+    "GenJ.12",
+    "GenJ.13",
+    "GenJ.14",
+    "GenJ.15",
+    "GenJ.16",
+    "GenJ.17",
+    "GenJ.18",
+    "GenJ.19",
+    "GenJ.20",
+    "GenJ.21",
+    "GenJ.22",
+    "GenJ.23",
+    "GenJ.24"
    ]
   }
  }
