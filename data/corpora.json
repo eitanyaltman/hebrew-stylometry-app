@@ -102,14 +102,14 @@
    "ref": false
   },
   "GenJ.06": {
-   "name": "Gen J 06 (Gen 18:1–18:33)",
+   "name": "Gen J 06 (Gen 18:1–33)",
    "ranges": [
     "Gen 18:1-33"
    ],
    "ref": false
   },
   "GenJ.07": {
-   "name": "Gen J 07 (Gen 19:1–19:34)",
+   "name": "Gen J 07 (Gen 19:1–34)",
    "ranges": [
     "Gen 19:1-28,30-34"
    ],
@@ -126,7 +126,7 @@
    "ref": false
   },
   "GenJ.09": {
-   "name": "Gen J 09 (Gen 24:22–24:58)",
+   "name": "Gen J 09 (Gen 24:22–58)",
    "ranges": [
     "Gen 24:22-58"
    ],
@@ -226,7 +226,7 @@
    "ref": false
   },
   "GenJ.21": {
-   "name": "Gen J 21 (Gen 45:1–45:28)",
+   "name": "Gen J 21 (Gen 45:1–28)",
    "ranges": [
     "Gen 45:1-28"
    ],
@@ -241,14 +241,7 @@
    "ref": false
   },
   "GenJ.23": {
-   "name": "Gen J 23 (Gen 49:1–49:28)",
-   "ranges": [
-    "Gen 49:1-28"
-   ],
-   "ref": false
-  },
-  "GenJ.24": {
-   "name": "Gen J 24 (Gen 50:1–50:22)",
+   "name": "Gen J 23 (Gen 50:1–22)",
    "ranges": [
     "Gen 50:1-11,14-22"
    ],
@@ -440,8 +433,7 @@
     "GenJ.20",
     "GenJ.21",
     "GenJ.22",
-    "GenJ.23",
-    "GenJ.24"
+    "GenJ.23"
    ]
   }
  }
