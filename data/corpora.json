@@ -100,6 +100,36 @@
     "2Kgs.25"
    ]
   },
+  "DD": {
+   "name": "D** — D* + DtrH*, reduced",
+   "short": "D**",
+   "notes": "D* and DtrH* combined, without Deut 28, Josh 6, 1 Kgs 8, Judg 6 and 2 Kgs 25. Reference pair with P* for the HC discrepancy test. Excluded as poor or doubtful examples of the source: Deut 28; Josh 6 (Joshua is widely seen as containing priestly or post-P material); 1 Kgs 8 (DtrH classification not a consensus; rejected by every corpus); Judg 6 (probably redacted from an older Gideon source). 2 Kgs 25 is left out as exilic or later DtrH material.",
+   "units": [
+    "Deut.6",
+    "Deut.8",
+    "Deut.9",
+    "Deut.10",
+    "Deut.11",
+    "Deut.12",
+    "Deut.13",
+    "Deut.15",
+    "Deut.16",
+    "Deut.18",
+    "Deut.19",
+    "Deut.26",
+    "Deut.27",
+    "Josh.1",
+    "Josh.5",
+    "Josh.12",
+    "Josh.23",
+    "Judg.2",
+    "2Sam.7",
+    "2Kgs.17.1-21",
+    "2Kgs.22",
+    "2Kgs.23",
+    "2Kgs.24"
+   ]
+  },
   "P": {
    "name": "P* — Priestly (GTC from paper)",
    "short": "P*",
@@ -128,77 +158,6 @@
     "Lev.8",
     "Lev.9",
     "P-aux"
-   ]
-  },
-  "DD": {
-   "name": "D** — D* + DtrH*, reduced",
-   "short": "D**",
-   "notes": "D* and DtrH* combined, without Deut 28, Josh 6, 1 Kgs 8 and Judg 6. Reference pair with P* for the HC discrepancy test. Excluded as poor or doubtful examples of the source: Deut 28; Josh 6 (Joshua is widely seen as containing priestly or post-P material); 1 Kgs 8 (DtrH classification not a consensus; rejected by every corpus); Judg 6 (probably redacted from an older Gideon source).",
-   "units": [
-    "Deut.6",
-    "Deut.12",
-    "Deut.13",
-    "Deut.15",
-    "Deut.16",
-    "Deut.18",
-    "Deut.19",
-    "Deut.26",
-    "Deut.8",
-    "Deut.9",
-    "Deut.10",
-    "Deut.11",
-    "Deut.27",
-    "Josh.1",
-    "Josh.5",
-    "Josh.12",
-    "Josh.23",
-    "Judg.2",
-    "2Sam.7",
-    "2Kgs.17.1-21",
-    "2Kgs.22",
-    "2Kgs.23",
-    "2Kgs.24",
-    "2Kgs.25"
-   ]
-  },
-  "DIntro": {
-   "name": "Deuteronomy intro (Deut 1–11)",
-   "short": "Dtr Intro",
-   "notes": "The introductory speeches of Deuteronomy, chapters 1–11. Deut 8–11 are also DtrH* chapters.",
-   "units": [
-    "Deut.1",
-    "Deut.2",
-    "Deut.3",
-    "Deut.4",
-    "Deut.5",
-    "Deut.6",
-    "Deut.7",
-    "Deut.8",
-    "Deut.9",
-    "Deut.10",
-    "Deut.11"
-   ]
-  },
-  "DLaw": {
-   "name": "Deuteronomic Law Code (Deut 12–26)",
-   "short": "Dtr Law",
-   "notes": "The law code of Deuteronomy, chapters 12–26. Several chapters are also D* chapters.",
-   "units": [
-    "Deut.12",
-    "Deut.13",
-    "Deut.14",
-    "Deut.15",
-    "Deut.16",
-    "Deut.17",
-    "Deut.18",
-    "Deut.19",
-    "Deut.20",
-    "Deut.21",
-    "Deut.22",
-    "Deut.23",
-    "Deut.24",
-    "Deut.25",
-    "Deut.26"
    ]
   },
   "Lev": {
@@ -236,9 +195,9 @@
    ]
   },
   "ExNar": {
-   "name": "Exodus story (Exod 1–14)",
+   "name": "Exodus story (Exod 1–18, without 6 and 12)",
    "short": "Exodus story",
-   "notes": "Exodus 1–14 without chapter 6, which is a P* chapter. Contains some priestly material (for example in Exod 12).",
+   "notes": "Exodus 1–18 without chapters 6 and 12. Chapter 6 is a P* chapter; chapter 12 is left out because it has substantial priestly material.",
    "units": [
     "Exod.1",
     "Exod.2",
@@ -250,9 +209,10 @@
     "Exod.9",
     "Exod.10",
     "Exod.11",
-    "Exod.12",
     "Exod.13",
-    "Exod.14"
+    "Exod.14",
+    "Exod.17",
+    "Exod.18"
    ]
   }
  }
