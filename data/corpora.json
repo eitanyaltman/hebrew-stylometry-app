@@ -351,61 +351,6 @@
     "P-aux"
    ]
   },
-  "Lev": {
-   "name": "Leviticus (entire book)",
-   "short": "Leviticus",
-   "notes": "All of Leviticus, including the Holiness Code (Lev 17–26). Lev 12 is reference-only because it has under 250 tokens.",
-   "units": [
-    "Lev.1",
-    "Lev.2",
-    "Lev.3",
-    "Lev.4",
-    "Lev.5",
-    "Lev.6",
-    "Lev.7",
-    "Lev.8",
-    "Lev.9",
-    "Lev.10",
-    "Lev.11",
-    "Lev.12.ref",
-    "Lev.13",
-    "Lev.14",
-    "Lev.15",
-    "Lev.16",
-    "Lev.17",
-    "Lev.18",
-    "Lev.19",
-    "Lev.20",
-    "Lev.21",
-    "Lev.22",
-    "Lev.23",
-    "Lev.24",
-    "Lev.25",
-    "Lev.26",
-    "Lev.27"
-   ]
-  },
-  "ExNar": {
-   "name": "Exodus story (Exod 1–18, without 6 and 12)",
-   "short": "Exodus story",
-   "notes": "Exodus 1–18 without chapters 6 and 12. Chapter 6 is a P* chapter; chapter 12 is left out because it has substantial priestly material.",
-   "units": [
-    "Exod.1",
-    "Exod.2",
-    "Exod.3",
-    "Exod.4",
-    "Exod.5",
-    "Exod.7",
-    "Exod.8",
-    "Exod.9",
-    "Exod.10",
-    "Exod.11",
-    "Exod.13",
-    "Exod.14",
-    "Exod.17",
-    "Exod.18"
-   ]
-  },
   "GenJ": {
    "name": "Genesis (J source - Baden)",
    "short": "Gen-J(B)",
@@ -434,6 +379,27 @@
     "GenJ.21",
     "GenJ.22",
     "GenJ.23"
+   ]
+  },
+  "ExNar": {
+   "name": "Exodus story (Exod 1–18, without 6 and 12)",
+   "short": "Exodus story",
+   "notes": "Exodus 1–18 without chapters 6 and 12. Chapter 6 is a P* chapter; chapter 12 is left out because it has substantial priestly material.",
+   "units": [
+    "Exod.1",
+    "Exod.2",
+    "Exod.3",
+    "Exod.4",
+    "Exod.5",
+    "Exod.7",
+    "Exod.8",
+    "Exod.9",
+    "Exod.10",
+    "Exod.11",
+    "Exod.13",
+    "Exod.14",
+    "Exod.17",
+    "Exod.18"
    ]
   }
  }
